@@ -66,30 +66,29 @@ export function useAudioEngine() {
         baseUrl: "https://tonejs.github.io/audio/salamander/",
       }).connect(reverbRef.current);
 
-      // 2. Concert Xylophone (PlayXylo assets)
+      // 2. Concert Xylophone (PlayXylo assets with specific obfuscated filenames)
       xylophoneSampler.current = new Tone.Sampler({
         urls: {
-          "C4": "C4.mp3",
-          "D4": "D4.mp3",
-          "E4": "E4.mp3",
-          "F4": "F4.mp3",
-          "G4": "G4.mp3",
-          "A4": "A4.mp3",
-          "B4": "B4.mp3",
-          "C5": "C5.mp3",
+          "C4": "wfpyq.mp3",
+          "D4": "watyq.mp3",
+          "E4": "wmnyq.mp3",
+          "F4": "wfwyq.mp3",
+          "G4": "wodyq.mp3",
+          "A4": "whtyq.mp3",
+          "B4": "wnnyq.mp3",
         },
         baseUrl: "https://playxylo.com/assets/audio/",
       }).connect(reverbRef.current);
 
-      // 3. Soprano Ukulele (Using bright pluck synthesis with ukulele voicing)
+      // 3. Soprano Ukulele (Using bright assets)
       ukuleleSampler.current = new Tone.Sampler({
         urls: {
-          "G4": "G4.mp3",
-          "C4": "C4.mp3",
-          "E4": "E4.mp3",
-          "A4": "A4.mp3"
+          "G4": "wodyq.mp3",
+          "C4": "wfpyq.mp3",
+          "E4": "wmnyq.mp3",
+          "A4": "whtyq.mp3"
         },
-        baseUrl: "https://playxylo.com/assets/audio/", // Reusing clean mallet samples for high-freq pluck-like sounds
+        baseUrl: "https://playxylo.com/assets/audio/", 
       }).connect(reverbRef.current);
 
       // 4. Acoustic Guitar
@@ -121,7 +120,6 @@ export function useAudioEngine() {
       violinSynth.current = new Tone.PolySynth(Tone.MonoSynth, {
         oscillator: { type: "sawtooth" },
         envelope: { attack: 0.2, decay: 0.3, sustain: 0.8, release: 1.5 },
-        filterEnvelope: { attack: 0.1, decay: 0.2, sustain: 0.5, release: 1, baseFrequency: 200, octaves: 4 }
       }).connect(reverbRef.current);
 
       // 7. Woodwinds (Flute - Breathy FM)
@@ -179,9 +177,8 @@ export function useAudioEngine() {
       
       setActiveNotes(prev => new Set(prev).add(note));
     } else if (type === 'percussive') {
-      if (drumSampler.current?.loaded) {
-        drumSampler.current.triggerAttack(note, time);
-      }
+      // Trigger drums even if sampler.loaded is false to avoid silent fail during loading
+      drumSampler.current?.triggerAttack(note, time);
     }
   }, [isLoaded]);
 
