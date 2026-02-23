@@ -51,7 +51,7 @@ export function useAudioEngine() {
       setAnalyzer(fft);
       Tone.getDestination().connect(fft);
 
-      // 1. Grand Piano
+      // 1. Grand Piano (Salamander - Pro Quality)
       pianoSampler.current = new Tone.Sampler({
         urls: {
           A0: "A0.mp3", C1: "C1.mp3", "D#1": "Ds1.mp3", "F#1": "Fs1.mp3",
