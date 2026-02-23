@@ -9,19 +9,19 @@ export function useAudioEngine() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [isInitializing, setIsInitializing] = useState(false);
   const [volume, setVolume] = useState(-12);
-  const [reverbMix, setReverbMix] = useState(0.2);
+  const [reverbMix, setReverbMix] = useState(0.25);
   const [activeNotes, setActiveNotes] = useState<Set<string>>(new Set());
   const [analyzer, setAnalyzer] = useState<AnalyserNode | null>(null);
 
-  // Samplers for high quality instruments
+  // Dedicated samplers for "Real" sounds
   const pianoSampler = useRef<Tone.Sampler | null>(null);
   const xylophoneSampler = useRef<Tone.Sampler | null>(null);
   const guitarSampler = useRef<Tone.Sampler | null>(null);
   const drumSampler = useRef<Tone.Sampler | null>(null);
   
-  // Specific Synths to avoid "same sound" issue
-  const violinSynth = useRef<Tone.AMSynth | null>(null);
-  const fluteSynth = useRef<Tone.FMSynth | null>(null);
+  // Specific Synths for distinct non-sampled instruments
+  const violinSynth = useRef<Tone.PolySynth | null>(null);
+  const fluteSynth = useRef<Tone.PolySynth | null>(null);
   const genericSynth = useRef<Tone.PolySynth | null>(null);
   
   const reverbRef = useRef<Tone.Reverb | null>(null);
@@ -36,21 +36,21 @@ export function useAudioEngine() {
     try {
       await Tone.start();
       
-      // Master output
+      // Master Output Chain
       volRef.current = new Tone.Volume(volume).toDestination();
       
-      // Global Studio Reverb
-      const reverb = new Tone.Reverb({ decay: 2.5, wet: reverbMix });
+      // High Quality Studio Reverb
+      const reverb = new Tone.Reverb({ decay: 2.8, wet: reverbMix });
       await reverb.generate();
       reverbRef.current = reverb.connect(volRef.current);
       
-      // Spectral Analysis
+      // Spectral Analysis Setup
       const fft = Tone.getContext().createAnalyser();
       fft.fftSize = 256;
       setAnalyzer(fft);
       Tone.getDestination().connect(fft);
 
-      // 1. Pro Piano (Salamander)
+      // 1. Grand Piano (Salamander)
       pianoSampler.current = new Tone.Sampler({
         urls: {
           A0: "A0.mp3", C1: "C1.mp3", "D#1": "Ds1.mp3", "F#1": "Fs1.mp3",
@@ -65,56 +65,60 @@ export function useAudioEngine() {
         baseUrl: "https://tonejs.github.io/audio/salamander/",
       }).connect(reverbRef.current);
 
-      // 2. Real Xylophone (PlayXylo style)
+      // 2. Concert Xylophone (High Quality Percussive Samples)
       xylophoneSampler.current = new Tone.Sampler({
         urls: {
-          G4: "xylophone_G4.mp3",
-          A4: "xylophone_A4.mp3",
-          C5: "xylophone_C5.mp3",
+          "C4": "xylophone_C4.mp3",
+          "G4": "xylophone_G4.mp3",
+          "C5": "xylophone_C5.mp3",
+          "G5": "xylophone_G5.mp3",
         },
         baseUrl: "https://tonejs.github.io/audio/berklee/",
       }).connect(reverbRef.current);
 
-      // 3. Acoustic Strings (Guitar/Ukulele)
+      // 3. Acoustic Guitar
       guitarSampler.current = new Tone.Sampler({
-        urls: { "F#2": "guitar_acoustic.mp3" },
+        urls: { 
+          "A2": "guitar_acoustic.mp3",
+          "C3": "guitar_acoustic.mp3",
+          "E3": "guitar_acoustic.mp3"
+        },
         baseUrl: "https://tonejs.github.io/audio/berklee/",
       }).connect(reverbRef.current);
 
-      // 4. Studio Drums (Acoustic Kit)
+      // 4. Studio Drums (Acoustic Kit) - Connected directly to Volume for Punch
       drumSampler.current = new Tone.Sampler({
         urls: {
-          C1: "kick.mp3",
-          D1: "snare.mp3",
+          "C1": "kick.mp3",
+          "D1": "snare.mp3",
           "F#1": "hihat.mp3",
           "G#1": "openhihat.mp3",
-          F1: "tom1.mp3",
-          G1: "tom2.mp3",
-          A1: "tom3.mp3",
+          "F1": "tom1.mp3",
+          "G1": "tom2.mp3",
+          "A1": "tom3.mp3",
           "C#2": "crash.mp3",
         },
         baseUrl: "https://tonejs.github.io/audio/drum-samples/acoustic-kit/",
       }).connect(volRef.current);
 
-      // 5. Distinct Instrument Synths
-      // Violin (String-like AM Synthesis)
-      violinSynth.current = new Tone.AMSynth({
+      // 5. Orchestral Strings (Violin) - Using sawtooth with slow attack
+      violinSynth.current = new Tone.PolySynth(Tone.MonoSynth, {
         oscillator: { type: "sawtooth" },
-        envelope: { attack: 0.1, decay: 0.2, sustain: 0.5, release: 0.8 }
+        envelope: { attack: 0.15, decay: 0.3, sustain: 0.6, release: 1 }
       }).connect(reverbRef.current);
 
-      // Flute/Clarinet (Breathy FM Synthesis)
-      fluteSynth.current = new Tone.FMSynth({
-        modulationIndex: 12,
-        envelope: { attack: 0.05, decay: 0.2, sustain: 0.3, release: 1 }
+      // 6. Woodwinds (Flute) - Using FM synthesis for breathy tone
+      fluteSynth.current = new Tone.PolySynth(Tone.FMSynth, {
+        modulationIndex: 8,
+        envelope: { attack: 0.08, decay: 0.2, sustain: 0.4, release: 0.8 }
       }).connect(reverbRef.current);
 
       genericSynth.current = new Tone.PolySynth(Tone.Synth).connect(reverbRef.current);
 
-      // Metronome
+      // Metronome Click
       tickSynthRef.current = new Tone.MembraneSynth({
-        pitchDecay: 0.008, octaves: 2,
-        envelope: { attack: 0.0006, decay: 0.5, sustain: 0 }
+        pitchDecay: 0.01, octaves: 1.5,
+        envelope: { attack: 0.001, decay: 0.4, sustain: 0 }
       }).connect(volRef.current);
 
       await Tone.loaded();
@@ -134,9 +138,9 @@ export function useAudioEngine() {
   const playNote = useCallback((note: string, type: 'melodic' | 'percussive' = 'melodic') => {
     if (!isLoaded) return;
     const time = Tone.now();
+    const inst = currentInstrument.current;
     
     if (type === 'melodic') {
-      const inst = currentInstrument.current;
       if (!inst) return;
 
       if (inst.id === 'piano' && pianoSampler.current?.loaded) {
@@ -154,17 +158,19 @@ export function useAudioEngine() {
       }
       
       setActiveNotes(prev => new Set(prev).add(note));
-    } else if (type === 'percussive' && drumSampler.current?.loaded) {
-      drumSampler.current.triggerAttack(note, time);
+    } else if (type === 'percussive') {
+      if (drumSampler.current?.loaded) {
+        drumSampler.current.triggerAttack(note, time);
+      }
     }
   }, [isLoaded]);
 
   const stopNote = useCallback((note: string, type: 'melodic' | 'percussive' = 'melodic') => {
     if (!isLoaded) return;
     const time = Tone.now();
+    const inst = currentInstrument.current;
     
     if (type === 'melodic') {
-      const inst = currentInstrument.current;
       if (!inst) return;
 
       if (inst.id === 'piano' && pianoSampler.current?.loaded) {
@@ -174,9 +180,9 @@ export function useAudioEngine() {
       } else if ((inst.id === 'guitar' || inst.id === 'ukulele') && guitarSampler.current?.loaded) {
         guitarSampler.current.triggerRelease(note, time);
       } else if (inst.id === 'violin' && violinSynth.current) {
-        violinSynth.current.triggerRelease(time);
+        violinSynth.current.triggerRelease(note, time);
       } else if ((inst.id === 'flute' || inst.id === 'clarinet') && fluteSynth.current) {
-        fluteSynth.current.triggerRelease(time);
+        fluteSynth.current.triggerRelease(note, time);
       } else {
         genericSynth.current?.triggerRelease(note, time);
       }
