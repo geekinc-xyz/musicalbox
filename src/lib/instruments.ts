@@ -1,4 +1,5 @@
-import { Piano, Drum, Music, Guitar, Mic2, Wind, Speaker } from 'lucide-react';
+
+import { Piano, Drum, Music, Guitar, Speaker, Wind, Triangle } from 'lucide-react';
 
 export type InstrumentType = 'melodic' | 'percussive';
 
@@ -11,14 +12,14 @@ export interface Instrument {
 }
 
 export const INSTRUMENTS: Instrument[] = [
-  { id: 'piano', name: 'Grand Piano', type: 'melodic', icon: Piano, category: 'Keyboards' },
-  { id: 'drums', name: 'Studio Drums', type: 'percussive', icon: Drum, category: 'Percussion' },
-  { id: 'ukulele', name: 'Ukulele', type: 'melodic', icon: Music, category: 'Strings' },
-  { id: 'xylophone', name: 'Xylophone', type: 'melodic', icon: Speaker, category: 'Mallets' },
-  { id: 'guitar', name: 'Acoustic Guitar', type: 'melodic', icon: Guitar, category: 'Strings' },
+  { id: 'piano', name: 'Salamander Grand', type: 'melodic', icon: Piano, category: 'Keyboards' },
+  { id: 'drums', name: 'Studio Acoustic', type: 'percussive', icon: Drum, category: 'Percussion' },
+  { id: 'ukulele', name: 'Soprano Ukulele', type: 'melodic', icon: Music, category: 'Strings' },
+  { id: 'xylophone', name: 'Concert Xylophone', type: 'melodic', icon: Speaker, category: 'Mallets' },
+  { id: 'guitar', name: 'Steel String Guitar', type: 'melodic', icon: Guitar, category: 'Strings' },
   { id: 'violin', name: 'Orchestral Violin', type: 'melodic', icon: Music, category: 'Strings' },
-  { id: 'flute', name: 'Pan Flute', type: 'melodic', icon: Wind, category: 'Woodwind' },
-  { id: 'clarinet', name: 'Clarinet', type: 'melodic', icon: Wind, category: 'Woodwind' },
+  { id: 'flute', name: 'Silver Flute', type: 'melodic', icon: Wind, category: 'Woodwind' },
+  { id: 'clarinet', name: 'B♭ Clarinet', type: 'melodic', icon: Wind, category: 'Woodwind' },
 ];
 
 export const PIANO_KEYS = [
@@ -52,10 +53,10 @@ export const PIANO_KEYS = [
 export const DRUM_PADS = [
   { id: 'kick', name: 'Kick', note: 'C1', color: 'bg-red-500' },
   { id: 'snare', name: 'Snare', note: 'D1', color: 'bg-blue-500' },
-  { id: 'hihat_closed', name: 'Hi-Hat (Cl)', note: 'F#1', color: 'bg-yellow-500' },
-  { id: 'hihat_open', name: 'Hi-Hat (Op)', note: 'G#1', color: 'bg-yellow-600' },
-  { id: 'tom_low', name: 'Tom Low', note: 'F1', color: 'bg-purple-500' },
-  { id: 'tom_mid', name: 'Tom Mid', note: 'G1', color: 'bg-purple-600' },
-  { id: 'tom_high', name: 'Tom High', note: 'A1', color: 'bg-purple-700' },
+  { id: 'hihat_closed', name: 'Hi-Hat', note: 'F#1', color: 'bg-yellow-500' },
+  { id: 'hihat_open', name: 'Open Hat', note: 'G#1', color: 'bg-yellow-600' },
+  { id: 'tom_low', name: 'Floor Tom', note: 'F1', color: 'bg-purple-500' },
+  { id: 'tom_mid', name: 'Mid Tom', note: 'G1', color: 'bg-purple-600' },
+  { id: 'tom_high', name: 'High Tom', note: 'A1', color: 'bg-purple-700' },
   { id: 'crash', name: 'Crash', note: 'C#2', color: 'bg-orange-500' },
 ];

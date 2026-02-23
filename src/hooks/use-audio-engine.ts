@@ -14,7 +14,9 @@ export function useAudioEngine() {
   const [analyzer, setAnalyzer] = useState<AnalyserNode | null>(null);
 
   const samplerRef = useRef<Tone.Sampler | null>(null);
-  const synthRef = useRef<Tone.PolySynth | null>(null);
+  const polySynthRef = useRef<Tone.PolySynth | null>(null);
+  const fmSynthRef = useRef<Tone.PolySynth<Tone.FMSynth> | null>(null);
+  const pluckSynthRef = useRef<Tone.PolySynth<Tone.PluckSynth> | null>(null);
   const drumSamplerRef = useRef<Tone.Sampler | null>(null);
   const reverbRef = useRef<Tone.Reverb | null>(null);
   const volRef = useRef<Tone.Volume | null>(null);
@@ -28,12 +30,10 @@ export function useAudioEngine() {
     try {
       await Tone.start();
       
-      // Setup Main Output Chain
       volRef.current = new Tone.Volume(volume).toDestination();
       
-      // Setup Reverb
       const reverb = new Tone.Reverb({ decay: 2.5, wet: reverbMix });
-      await reverb.ready;
+      await reverb.generate();
       reverbRef.current = reverb.connect(volRef.current);
       
       const fft = Tone.getContext().createAnalyser();
@@ -41,71 +41,52 @@ export function useAudioEngine() {
       setAnalyzer(fft);
       Tone.getDestination().connect(fft);
 
-      // High-Quality Salamander Grand Piano Samples
-      // We use a dense set of samples for maximum realism
+      // 1. High-Quality Piano
       samplerRef.current = new Tone.Sampler({
         urls: {
-          A0: "A0.mp3",
-          C1: "C1.mp3",
-          "D#1": "Ds1.mp3",
-          "F#1": "Fs1.mp3",
-          A1: "A1.mp3",
-          C2: "C2.mp3",
-          "D#2": "Ds2.mp3",
-          "F#2": "Fs2.mp3",
-          A2: "A2.mp3",
-          C3: "C3.mp3",
-          "D#3": "Ds3.mp3",
-          "F#3": "Fs3.mp3",
-          A3: "A3.mp3",
-          C4: "C4.mp3",
-          "D#4": "Ds4.mp3",
-          "F#4": "Fs4.mp3",
-          A4: "A4.mp3",
-          C5: "C5.mp3",
-          "D#5": "Ds5.mp3",
-          "F#5": "Fs5.mp3",
-          A5: "A5.mp3",
-          C6: "C6.mp3",
-          "D#6": "Ds6.mp3",
-          "F#6": "Fs6.mp3",
-          A6: "A6.mp3",
-          C7: "C7.mp3",
-          "D#7": "Ds7.mp3",
-          "F#7": "Fs7.mp3",
-          A7: "A7.mp3",
-          C8: "C8.mp3"
+          A0: "A0.mp3", C1: "C1.mp3", "D#1": "Ds1.mp3", "F#1": "Fs1.mp3",
+          A1: "A1.mp3", C2: "C2.mp3", "D#2": "Ds2.mp3", "F#2": "Fs2.mp3",
+          A2: "A2.mp3", C3: "C3.mp3", "D#3": "Ds3.mp3", "F#3": "Fs3.mp3",
+          A3: "A3.mp3", C4: "C4.mp3", "D#4": "Ds4.mp3", "F#4": "Fs4.mp3",
+          A4: "A4.mp3", C5: "C5.mp3", "D#5": "Ds5.mp3", "F#5": "Fs5.mp3",
+          A5: "A5.mp3", C6: "C6.mp3", "D#6": "Ds6.mp3", "F#6": "Fs6.mp3",
+          A6: "A6.mp3", C7: "C7.mp3", "D#7": "Ds7.mp3", "F#7": "Fs7.mp3",
+          A7: "A7.mp3", C8: "C8.mp3"
         },
         baseUrl: "https://tonejs.github.io/audio/salamander/",
-        release: 1.5,
+        release: 1,
       }).connect(reverbRef.current);
 
-      // Metronome Tick
+      // 2. Pro Studio Drums (Acoustic Kit)
+      drumSamplerRef.current = new Tone.Sampler({
+        urls: {
+          C1: "kick.mp3",
+          D1: "snare.mp3",
+          "F#1": "hihat.mp3",
+          "G#1": "openhihat.mp3",
+          F1: "tom1.mp3",
+          G1: "tom2.mp3",
+          A1: "tom3.mp3",
+          "C#2": "crash.mp3",
+        },
+        baseUrl: "https://tonejs.github.io/audio/drum-samples/acoustic-kit/",
+      }).connect(volRef.current);
+
+      // 3. Physical Modeling for Strings (Guitar, Ukulele)
+      pluckSynthRef.current = new Tone.PolySynth(Tone.PluckSynth).connect(reverbRef.current);
+
+      // 4. FM Synthesis for Mallets (Xylophone)
+      fmSynthRef.current = new Tone.PolySynth(Tone.FMSynth).connect(reverbRef.current);
+
+      // 5. standard PolySynth for Wind/Others
+      polySynthRef.current = new Tone.PolySynth(Tone.Synth).connect(reverbRef.current);
+
       tickSynthRef.current = new Tone.MembraneSynth({
         pitchDecay: 0.008,
         octaves: 2,
         envelope: { attack: 0.0006, decay: 0.5, sustain: 0 }
       }).connect(volRef.current);
 
-      // Flexible PolySynth for other instruments
-      synthRef.current = new Tone.PolySynth(Tone.Synth).connect(reverbRef.current);
-
-      // Studio Drums
-      drumSamplerRef.current = new Tone.Sampler({
-        urls: {
-          C1: "kick.mp3",
-          D1: "snare.mp3",
-          "F#1": "hh.mp3",
-          "G#1": "hho.mp3",
-          F1: "tom1.mp3",
-          G1: "tom2.mp3",
-          A1: "tom3.mp3",
-          "C#2": "crash.mp3",
-        },
-        baseUrl: "https://tonejs.github.io/audio/drum-samples/CR78/"
-      }).connect(volRef.current);
-
-      // Explicitly wait for ALL samples to load
       await Tone.loaded();
       setIsLoaded(true);
     } catch (error) {
@@ -116,34 +97,50 @@ export function useAudioEngine() {
   }, [isLoaded, isInitializing, reverbMix, volume]);
 
   const loadInstrument = useCallback(async (instrument: Instrument) => {
-    if (!isLoaded || !synthRef.current) return;
+    if (!isLoaded) return;
     currentInstrument.current = instrument;
 
+    // Reset default settings for synth based on type
     switch (instrument.id) {
-      case 'piano':
-        // No changes needed for Sampler piano, but keep synth fallback tuned
-        synthRef.current.set({ oscillator: { type: 'triangle' }, envelope: { attack: 0.02, decay: 0.1, sustain: 0.3, release: 1 } });
-        break;
-      case 'violin':
-        synthRef.current.set({ oscillator: { type: 'sawtooth' }, envelope: { attack: 0.4, release: 0.8 } });
-        break;
-      case 'flute':
-        synthRef.current.set({ oscillator: { type: 'sine' }, envelope: { attack: 0.15, release: 0.4 } });
-        break;
       case 'ukulele':
-        synthRef.current.set({ oscillator: { type: 'square' }, envelope: { attack: 0.01, decay: 0.2, sustain: 0.2, release: 0.4 } });
-        break;
-      case 'xylophone':
-        synthRef.current.set({ oscillator: { type: 'sine' }, envelope: { attack: 0.001, decay: 0.1, sustain: 0.05, release: 0.1 } });
+        pluckSynthRef.current?.set({
+          dampening: 3000,
+          resonance: 0.95
+        });
         break;
       case 'guitar':
-        synthRef.current.set({ oscillator: { type: 'triangle' }, envelope: { attack: 0.05, decay: 0.3, sustain: 0.4, release: 0.6 } });
+        pluckSynthRef.current?.set({
+          dampening: 1000,
+          resonance: 0.98
+        });
+        break;
+      case 'xylophone':
+        fmSynthRef.current?.set({
+          harmonicity: 3.5,
+          modulationIndex: 10,
+          oscillator: { type: 'sine' },
+          envelope: { attack: 0.001, decay: 0.1, sustain: 0, release: 0.1 },
+          modulation: { type: 'square' }
+        });
+        break;
+      case 'flute':
+        polySynthRef.current?.set({
+          oscillator: { type: 'sine' },
+          envelope: { attack: 0.1, decay: 0.2, sustain: 0.8, release: 0.4 }
+        });
+        break;
+      case 'violin':
+        polySynthRef.current?.set({
+          oscillator: { type: 'sawtooth' },
+          envelope: { attack: 0.3, decay: 0.1, sustain: 1, release: 0.8 }
+        });
         break;
       case 'clarinet':
-        synthRef.current.set({ oscillator: { type: 'square' }, envelope: { attack: 0.1, release: 0.3 } });
+        polySynthRef.current?.set({
+          oscillator: { type: 'square' },
+          envelope: { attack: 0.05, decay: 0.1, sustain: 0.7, release: 0.3 }
+        });
         break;
-      default:
-        synthRef.current.set({ oscillator: { type: 'triangle' }, envelope: { attack: 0.1, release: 1 } });
     }
   }, [isLoaded]);
 
@@ -152,21 +149,21 @@ export function useAudioEngine() {
     const time = Tone.now();
     
     if (type === 'melodic') {
-      const isPiano = currentInstrument.current?.id === 'piano';
+      const instId = currentInstrument.current?.id;
       
-      // Real Piano Sound Check
-      if (isPiano && samplerRef.current && samplerRef.current.loaded) {
+      if (instId === 'piano' && samplerRef.current?.loaded) {
         samplerRef.current.triggerAttack(note, time);
-      } else if (synthRef.current) {
-        // Fallback for non-piano or if sampler still loading
-        synthRef.current.triggerAttack(note, time);
+      } else if ((instId === 'ukulele' || instId === 'guitar') && pluckSynthRef.current) {
+        pluckSynthRef.current.triggerAttack(note, time);
+      } else if (instId === 'xylophone' && fmSynthRef.current) {
+        fmSynthRef.current.triggerAttack(note, time);
+      } else if (polySynthRef.current) {
+        polySynthRef.current.triggerAttack(note, time);
       }
       
       setActiveNotes(prev => new Set(prev).add(note));
-    } else if (type === 'percussive' && drumSamplerRef.current) {
-      if (drumSamplerRef.current.loaded) {
-        drumSamplerRef.current.triggerAttack(note, time);
-      }
+    } else if (type === 'percussive' && drumSamplerRef.current?.loaded) {
+      drumSamplerRef.current.triggerAttack(note, time);
     }
   }, [isLoaded]);
 
@@ -175,12 +172,17 @@ export function useAudioEngine() {
     const time = Tone.now();
     
     if (type === 'melodic') {
-      const isPiano = currentInstrument.current?.id === 'piano';
+      const instId = currentInstrument.current?.id;
       
-      if (isPiano && samplerRef.current && samplerRef.current.loaded) {
+      if (instId === 'piano' && samplerRef.current?.loaded) {
         samplerRef.current.triggerRelease(note, time);
-      } else if (synthRef.current) {
-        synthRef.current.triggerRelease(note, time);
+      } else if ((instId === 'ukulele' || instId === 'guitar') && pluckSynthRef.current) {
+        // PluckSynth handles release automatically, but for Poly compatibility:
+        pluckSynthRef.current.triggerRelease(note, time);
+      } else if (instId === 'xylophone' && fmSynthRef.current) {
+        fmSynthRef.current.triggerRelease(note, time);
+      } else if (polySynthRef.current) {
+        polySynthRef.current.triggerRelease(note, time);
       }
       
       setActiveNotes(prev => {
