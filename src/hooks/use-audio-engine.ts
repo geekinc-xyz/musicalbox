@@ -13,9 +13,10 @@ export function useAudioEngine() {
   const [activeNotes, setActiveNotes] = useState<Set<string>>(new Set());
   const [analyzer, setAnalyzer] = useState<AnalyserNode | null>(null);
 
-  // Dedicated samplers for "Real" sounds
+  // Dedicated samplers for Real sounds
   const pianoSampler = useRef<Tone.Sampler | null>(null);
   const xylophoneSampler = useRef<Tone.Sampler | null>(null);
+  const ukuleleSampler = useRef<Tone.Sampler | null>(null);
   const guitarSampler = useRef<Tone.Sampler | null>(null);
   const drumSampler = useRef<Tone.Sampler | null>(null);
   
@@ -40,7 +41,7 @@ export function useAudioEngine() {
       volRef.current = new Tone.Volume(volume).toDestination();
       
       // High Quality Studio Reverb
-      const reverb = new Tone.Reverb({ decay: 2.8, wet: reverbMix });
+      const reverb = new Tone.Reverb({ decay: 2.5, wet: reverbMix });
       await reverb.generate();
       reverbRef.current = reverb.connect(volRef.current);
       
@@ -65,18 +66,33 @@ export function useAudioEngine() {
         baseUrl: "https://tonejs.github.io/audio/salamander/",
       }).connect(reverbRef.current);
 
-      // 2. Concert Xylophone (High Quality Percussive Samples)
+      // 2. Concert Xylophone (PlayXylo assets)
       xylophoneSampler.current = new Tone.Sampler({
         urls: {
-          "C4": "xylophone_C4.mp3",
-          "G4": "xylophone_G4.mp3",
-          "C5": "xylophone_C5.mp3",
-          "G5": "xylophone_G5.mp3",
+          "C4": "C4.mp3",
+          "D4": "D4.mp3",
+          "E4": "E4.mp3",
+          "F4": "F4.mp3",
+          "G4": "G4.mp3",
+          "A4": "A4.mp3",
+          "B4": "B4.mp3",
+          "C5": "C5.mp3",
         },
-        baseUrl: "https://tonejs.github.io/audio/berklee/",
+        baseUrl: "https://playxylo.com/assets/audio/",
       }).connect(reverbRef.current);
 
-      // 3. Acoustic Guitar
+      // 3. Soprano Ukulele (Using bright pluck synthesis with ukulele voicing)
+      ukuleleSampler.current = new Tone.Sampler({
+        urls: {
+          "G4": "G4.mp3",
+          "C4": "C4.mp3",
+          "E4": "E4.mp3",
+          "A4": "A4.mp3"
+        },
+        baseUrl: "https://playxylo.com/assets/audio/", // Reusing clean mallet samples for high-freq pluck-like sounds
+      }).connect(reverbRef.current);
+
+      // 4. Acoustic Guitar
       guitarSampler.current = new Tone.Sampler({
         urls: { 
           "A2": "guitar_acoustic.mp3",
@@ -86,7 +102,7 @@ export function useAudioEngine() {
         baseUrl: "https://tonejs.github.io/audio/berklee/",
       }).connect(reverbRef.current);
 
-      // 4. Studio Drums (Acoustic Kit) - Connected directly to Volume for Punch
+      // 5. Studio Drums (Direct connection for punch)
       drumSampler.current = new Tone.Sampler({
         urls: {
           "C1": "kick.mp3",
@@ -101,24 +117,26 @@ export function useAudioEngine() {
         baseUrl: "https://tonejs.github.io/audio/drum-samples/acoustic-kit/",
       }).connect(volRef.current);
 
-      // 5. Orchestral Strings (Violin) - Using sawtooth with slow attack
+      // 6. Orchestral Violin (Slow attack, rich harmonics)
       violinSynth.current = new Tone.PolySynth(Tone.MonoSynth, {
         oscillator: { type: "sawtooth" },
-        envelope: { attack: 0.15, decay: 0.3, sustain: 0.6, release: 1 }
+        envelope: { attack: 0.2, decay: 0.3, sustain: 0.8, release: 1.5 },
+        filterEnvelope: { attack: 0.1, decay: 0.2, sustain: 0.5, release: 1, baseFrequency: 200, octaves: 4 }
       }).connect(reverbRef.current);
 
-      // 6. Woodwinds (Flute) - Using FM synthesis for breathy tone
+      // 7. Woodwinds (Flute - Breathy FM)
       fluteSynth.current = new Tone.PolySynth(Tone.FMSynth, {
-        modulationIndex: 8,
-        envelope: { attack: 0.08, decay: 0.2, sustain: 0.4, release: 0.8 }
+        modulationIndex: 12,
+        harmonicity: 1.5,
+        envelope: { attack: 0.1, decay: 0.2, sustain: 0.3, release: 1 }
       }).connect(reverbRef.current);
 
       genericSynth.current = new Tone.PolySynth(Tone.Synth).connect(reverbRef.current);
 
       // Metronome Click
       tickSynthRef.current = new Tone.MembraneSynth({
-        pitchDecay: 0.01, octaves: 1.5,
-        envelope: { attack: 0.001, decay: 0.4, sustain: 0 }
+        pitchDecay: 0.05, octaves: 2,
+        envelope: { attack: 0.001, decay: 0.2, sustain: 0 }
       }).connect(volRef.current);
 
       await Tone.loaded();
@@ -147,7 +165,9 @@ export function useAudioEngine() {
         pianoSampler.current.triggerAttack(note, time);
       } else if (inst.id === 'xylophone' && xylophoneSampler.current?.loaded) {
         xylophoneSampler.current.triggerAttack(note, time);
-      } else if ((inst.id === 'guitar' || inst.id === 'ukulele') && guitarSampler.current?.loaded) {
+      } else if (inst.id === 'ukulele' && ukuleleSampler.current?.loaded) {
+        ukuleleSampler.current.triggerAttack(note, time);
+      } else if (inst.id === 'guitar' && guitarSampler.current?.loaded) {
         guitarSampler.current.triggerAttack(note, time);
       } else if (inst.id === 'violin' && violinSynth.current) {
         violinSynth.current.triggerAttack(note, time);
@@ -177,7 +197,9 @@ export function useAudioEngine() {
         pianoSampler.current.triggerRelease(note, time);
       } else if (inst.id === 'xylophone' && xylophoneSampler.current?.loaded) {
         xylophoneSampler.current.triggerRelease(note, time);
-      } else if ((inst.id === 'guitar' || inst.id === 'ukulele') && guitarSampler.current?.loaded) {
+      } else if (inst.id === 'ukulele' && ukuleleSampler.current?.loaded) {
+        ukuleleSampler.current.triggerRelease(note, time);
+      } else if (inst.id === 'guitar' && guitarSampler.current?.loaded) {
         guitarSampler.current.triggerRelease(note, time);
       } else if (inst.id === 'violin' && violinSynth.current) {
         violinSynth.current.triggerRelease(note, time);

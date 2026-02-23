@@ -27,23 +27,23 @@ export function Xylophone({ onPlay, onStop, activeNotes }: XylophoneProps) {
   const handlePress = (note: string) => {
     onPlay(note);
     setPressedNote(note);
-    // Visual feedback duration matches the percussive nature of the xylophone
+    // Visual and audio feedback duration matches the percussive nature of the xylophone
     setTimeout(() => {
       setPressedNote(null);
       onStop(note);
-    }, 200);
+    }, 150);
   };
 
   return (
     <div className="flex flex-col items-center gap-12 py-14 w-full max-w-6xl mx-auto">
-      {/* Wooden Resonance Frame */}
-      <div className="relative flex items-center justify-center p-10 md:p-14 bg-[#4a2f26] rounded-[3rem] shadow-[0_30px_70px_-10px_rgba(0,0,0,0.9)] border-b-8 border-[#2e1c17] transition-all overflow-hidden">
+      {/* Wooden Resonance Frame inspired by PlayXylo */}
+      <div className="relative flex items-center justify-center p-10 md:p-14 bg-[#5d3a2f] rounded-[3.5rem] shadow-[0_40px_80px_-15px_rgba(0,0,0,0.9)] border-b-[12px] border-[#3a241d] transition-all overflow-hidden ring-1 ring-white/10">
         
-        {/* Support Rails (Internal View) */}
-        <div className="absolute top-[25%] left-0 right-0 h-3 bg-[#2e1c17]/60 shadow-inner" />
-        <div className="absolute bottom-[25%] left-0 right-0 h-3 bg-[#2e1c17]/60 shadow-inner" />
+        {/* Support Rails */}
+        <div className="absolute top-[28%] left-0 right-0 h-4 bg-[#3a241d]/50 shadow-inner" />
+        <div className="absolute bottom-[28%] left-0 right-0 h-4 bg-[#3a241d]/50 shadow-inner" />
 
-        <div className="flex items-end gap-3 md:gap-5 lg:gap-7 relative z-10 h-[400px]">
+        <div className="flex items-end gap-3 md:gap-4 lg:gap-6 relative z-10 h-[400px]">
           {XYLOPHONE_BARS.map((bar) => {
             const isActive = pressedNote === bar.note || activeNotes.has(bar.note);
             return (
@@ -55,31 +55,30 @@ export function Xylophone({ onPlay, onStop, activeNotes }: XylophoneProps) {
                   bar.color,
                   bar.height,
                   "w-12 sm:w-16 md:w-20 lg:w-24",
-                  "shadow-[inset_4px_4px_8px_rgba(255,255,255,0.4),inset_-4px_-10px_10px_rgba(0,0,0,0.4),8px_15px_30px_rgba(0,0,0,0.6)]",
-                  "hover:brightness-110 active:scale-[0.94] active:translate-y-2",
-                  isActive && "scale-[0.95] translate-y-3 brightness-125 shadow-inner"
+                  "shadow-[inset_4px_4px_10px_rgba(255,255,255,0.4),inset_-4px_-10px_12px_rgba(0,0,0,0.4),10px_20px_40px_rgba(0,0,0,0.7)]",
+                  "hover:brightness-110 active:scale-[0.92] active:translate-y-3",
+                  isActive && "scale-[0.94] translate-y-4 brightness-125 shadow-inner"
                 )}
               >
-                {/* Mounting Bolts (Upper) */}
-                <div className="absolute top-10 w-4 h-4 rounded-full bg-neutral-300 shadow-lg border border-neutral-500/30 flex items-center justify-center">
-                  <div className="w-1 h-1 bg-neutral-500/50 rounded-full" />
+                {/* Mounting Bolts */}
+                <div className="absolute top-12 w-4 h-4 rounded-full bg-neutral-200 shadow-lg border border-neutral-600/40 flex items-center justify-center">
+                  <div className="w-1 h-1 bg-neutral-600/50 rounded-full" />
                 </div>
 
-                {/* Mounting Bolts (Lower) */}
-                <div className="absolute bottom-10 w-4 h-4 rounded-full bg-neutral-300 shadow-lg border border-neutral-500/30 flex items-center justify-center">
-                   <div className="w-1 h-1 bg-neutral-500/50 rounded-full" />
+                <div className="absolute bottom-12 w-4 h-4 rounded-full bg-neutral-200 shadow-lg border border-neutral-600/40 flex items-center justify-center">
+                   <div className="w-1 h-1 bg-neutral-600/50 rounded-full" />
                 </div>
                 
-                {/* Embossed Note Label */}
-                <div className="mt-auto mb-16 select-none">
-                   <span className="text-white font-black text-xl md:text-3xl tracking-tighter drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)] opacity-80 group-hover:opacity-100 transition-opacity">
+                {/* Note Label */}
+                <div className="mt-auto mb-20 select-none">
+                   <span className="text-white font-black text-2xl md:text-4xl tracking-tighter drop-shadow-[0_3px_6px_rgba(0,0,0,0.6)] opacity-90 group-hover:opacity-100 transition-opacity">
                     {bar.note.replace('4', '').replace('5', '')}
                    </span>
                 </div>
 
-                {/* Dynamic Glow Line */}
+                {/* Internal Glow Effect */}
                 <div className={cn(
-                  "absolute inset-0 bg-white/20 opacity-0 transition-opacity duration-300 pointer-events-none rounded-2xl",
+                  "absolute inset-0 bg-white/25 opacity-0 transition-opacity duration-200 pointer-events-none rounded-2xl",
                   isActive && "opacity-100"
                 )} />
               </button>
@@ -89,12 +88,12 @@ export function Xylophone({ onPlay, onStop, activeNotes }: XylophoneProps) {
       </div>
       
       <div className="flex flex-col items-center gap-4">
-        <p className="text-[12px] font-black uppercase tracking-[0.5em] text-muted-foreground/50 text-center animate-pulse">
-          USE MOUSE OR KEYBOARD (A-K) TO PLAY
+        <p className="text-[12px] font-black uppercase tracking-[0.5em] text-muted-foreground/60 text-center animate-pulse">
+          TAP THE BARS OR USE KEYS (A-K)
         </p>
-        <div className="flex gap-2">
+        <div className="flex gap-3">
           {XYLOPHONE_BARS.map(b => (
-            <div key={b.note} className={cn("w-3 h-3 rounded-full opacity-30", b.color)} />
+            <div key={b.note} className={cn("w-4 h-4 rounded-full opacity-40 shadow-sm", b.color)} />
           ))}
         </div>
       </div>
