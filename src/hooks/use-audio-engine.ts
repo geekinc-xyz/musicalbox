@@ -115,13 +115,18 @@ export function useAudioEngine() {
     
     if (type === 'melodic') {
       if (currentInstrument.current?.id === 'piano' && samplerRef.current) {
-        samplerRef.current.triggerAttack(note);
+        // Only trigger if the buffers are actually loaded to prevent runtime crashes
+        if (samplerRef.current.loaded) {
+          samplerRef.current.triggerAttack(note);
+        }
       } else if (synthRef.current) {
         synthRef.current.triggerAttack(note);
       }
       setActiveNotes(prev => new Set(prev).add(note));
     } else if (type === 'percussive' && drumSamplerRef.current) {
-      drumSamplerRef.current.triggerAttack(note);
+      if (drumSamplerRef.current.loaded) {
+        drumSamplerRef.current.triggerAttack(note);
+      }
     }
   }, [isLoaded]);
 
@@ -130,7 +135,9 @@ export function useAudioEngine() {
     
     if (type === 'melodic') {
       if (currentInstrument.current?.id === 'piano' && samplerRef.current) {
-        samplerRef.current.triggerRelease(note);
+        if (samplerRef.current.loaded) {
+          samplerRef.current.triggerRelease(note);
+        }
       } else if (synthRef.current) {
         synthRef.current.triggerRelease(note);
       }
