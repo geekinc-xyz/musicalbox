@@ -165,7 +165,9 @@ export function useAudioEngine() {
       
       setActiveNotes(prev => new Set(prev).add(note));
     } else if (type === 'percussive') {
-      drumSampler.current?.triggerAttack(note, time);
+      if (drumSampler.current?.loaded) {
+        drumSampler.current.triggerAttack(note, time);
+      }
     }
   }, [isLoaded]);
 
