@@ -50,7 +50,7 @@ export function useAudioEngine() {
       setAnalyzer(fft);
       Tone.getDestination().connect(fft);
 
-      // 1. Pro Piano
+      // 1. Pro Piano (Salamander)
       pianoSampler.current = new Tone.Sampler({
         urls: {
           A0: "A0.mp3", C1: "C1.mp3", "D#1": "Ds1.mp3", "F#1": "Fs1.mp3",
@@ -75,13 +75,13 @@ export function useAudioEngine() {
         baseUrl: "https://tonejs.github.io/audio/berklee/",
       }).connect(reverbRef.current);
 
-      // 3. Acoustic Strings
+      // 3. Acoustic Strings (Guitar/Ukulele)
       guitarSampler.current = new Tone.Sampler({
         urls: { "F#2": "guitar_acoustic.mp3" },
         baseUrl: "https://tonejs.github.io/audio/berklee/",
       }).connect(reverbRef.current);
 
-      // 4. Studio Drums (Acoustic Kit) - CRITICAL: Connect to master volume
+      // 4. Studio Drums (Acoustic Kit)
       drumSampler.current = new Tone.Sampler({
         urls: {
           C1: "kick.mp3",
@@ -97,11 +97,13 @@ export function useAudioEngine() {
       }).connect(volRef.current);
 
       // 5. Distinct Instrument Synths
+      // Violin (String-like AM Synthesis)
       violinSynth.current = new Tone.AMSynth({
         oscillator: { type: "sawtooth" },
         envelope: { attack: 0.1, decay: 0.2, sustain: 0.5, release: 0.8 }
       }).connect(reverbRef.current);
 
+      // Flute/Clarinet (Breathy FM Synthesis)
       fluteSynth.current = new Tone.FMSynth({
         modulationIndex: 12,
         envelope: { attack: 0.05, decay: 0.2, sustain: 0.3, release: 1 }
