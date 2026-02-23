@@ -1,3 +1,4 @@
+
 "use client"
 
 import { useEffect, useRef, useState, useCallback } from 'react';
@@ -27,8 +28,13 @@ export function useAudioEngine() {
     try {
       await Tone.start();
       
+      // Setup Main Output Chain
       volRef.current = new Tone.Volume(volume).toDestination();
-      reverbRef.current = new Tone.Reverb({ decay: 2.5, wet: reverbMix }).connect(volRef.current);
+      
+      // Setup Reverb (Tone.Reverb is async in newer versions)
+      const reverb = new Tone.Reverb({ decay: 2.5, wet: reverbMix });
+      await reverb.ready; // Wait for reverb to be ready
+      reverbRef.current = reverb.connect(volRef.current);
       
       const fft = Tone.getContext().createAnalyser();
       fft.fftSize = 256;
@@ -54,7 +60,7 @@ export function useAudioEngine() {
         envelope: { attack: 0.0006, decay: 0.5, sustain: 0 }
       }).connect(volRef.current);
 
-      // Flexible PolySynth for other instruments
+      // Flexible PolySynth for other instruments & fallback
       synthRef.current = new Tone.PolySynth(Tone.Synth).connect(reverbRef.current);
 
       // Studio Drums
@@ -72,6 +78,7 @@ export function useAudioEngine() {
         baseUrl: "https://tonejs.github.io/audio/drum-samples/CR78/"
       }).connect(volRef.current);
 
+      // Wait for all samples to load
       await Tone.loaded();
       setIsLoaded(true);
     } catch (error) {
@@ -87,6 +94,9 @@ export function useAudioEngine() {
 
     // Tuning the synth for requested instruments
     switch (instrument.id) {
+      case 'piano':
+        synthRef.current.set({ oscillator: { type: 'triangle' }, envelope: { attack: 0.02, decay: 0.1, sustain: 0.3, release: 1 } });
+        break;
       case 'violin':
         synthRef.current.set({ oscillator: { type: 'sawtooth' }, envelope: { attack: 0.4, release: 0.8 } });
         break;
@@ -115,14 +125,15 @@ export function useAudioEngine() {
     const time = Tone.now();
     
     if (type === 'melodic') {
-      if (currentInstrument.current?.id === 'piano' && samplerRef.current) {
-        // Only trigger if the buffers are actually loaded to prevent runtime crashes
-        if (samplerRef.current.loaded) {
-          samplerRef.current.triggerAttack(note, time);
-        }
+      const isPiano = currentInstrument.current?.id === 'piano';
+      
+      // Prefer sampler for piano, fallback to synth if sampler not loaded or not piano
+      if (isPiano && samplerRef.current && samplerRef.current.loaded) {
+        samplerRef.current.triggerAttack(note, time);
       } else if (synthRef.current) {
         synthRef.current.triggerAttack(note, time);
       }
+      
       setActiveNotes(prev => new Set(prev).add(note));
     } else if (type === 'percussive' && drumSamplerRef.current) {
       if (drumSamplerRef.current.loaded) {
@@ -136,13 +147,14 @@ export function useAudioEngine() {
     const time = Tone.now();
     
     if (type === 'melodic') {
-      if (currentInstrument.current?.id === 'piano' && samplerRef.current) {
-        if (samplerRef.current.loaded) {
-          samplerRef.current.triggerRelease(note, time);
-        }
+      const isPiano = currentInstrument.current?.id === 'piano';
+      
+      if (isPiano && samplerRef.current && samplerRef.current.loaded) {
+        samplerRef.current.triggerRelease(note, time);
       } else if (synthRef.current) {
         synthRef.current.triggerRelease(note, time);
       }
+      
       setActiveNotes(prev => {
         const next = new Set(prev);
         next.delete(note);
@@ -153,7 +165,6 @@ export function useAudioEngine() {
 
   const playTick = useCallback((isHigh: boolean = false) => {
     if (!isLoaded || !tickSynthRef.current) return;
-    // Explicitly use Tone.now() to ensure strict scheduling order and avoid overlaps
     tickSynthRef.current.triggerAttackRelease(isHigh ? "C3" : "C2", "16n", Tone.now());
   }, [isLoaded]);
 
