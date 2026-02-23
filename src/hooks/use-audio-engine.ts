@@ -51,7 +51,7 @@ export function useAudioEngine() {
       setAnalyzer(fft);
       Tone.getDestination().connect(fft);
 
-      // 1. Grand Piano (Salamander - Pro Quality)
+      // 1. Grand Piano (Salamander - High Fidelity)
       pianoSampler.current = new Tone.Sampler({
         urls: {
           A0: "A0.mp3", C1: "C1.mp3", "D#1": "Ds1.mp3", "F#1": "Fs1.mp3",
@@ -66,15 +66,22 @@ export function useAudioEngine() {
         baseUrl: "https://tonejs.github.io/audio/salamander/",
       }).connect(reverbRef.current);
 
-      // 2. Xylophone (Using reliable Berklee assets)
+      // 2. Concert Xylophone (Using your local files in /SonsXylo)
       xylophoneSampler.current = new Tone.Sampler({
         urls: {
-          "C4": "xylophone.mp3",
+          "C4": "wfpyq.mp3",
+          "D4": "watyq.mp3",
+          "E4": "wetyq.mp3",
+          "F4": "wrtyq.mp3",
+          "G4": "wttyq.mp3",
+          "A4": "wytyq.mp3",
+          "B4": "wutyq.mp3",
+          "C5": "wityq.mp3",
         },
-        baseUrl: "https://tonejs.github.io/audio/berklee/",
+        baseUrl: "/SonsXylo/",
       }).connect(reverbRef.current);
 
-      // 3. Acoustic Guitar
+      // 3. Steel String Guitar (High Quality Samples)
       guitarSampler.current = new Tone.Sampler({
         urls: { 
           "A2": "guitar_acoustic.mp3",
@@ -82,7 +89,7 @@ export function useAudioEngine() {
         baseUrl: "https://tonejs.github.io/audio/berklee/",
       }).connect(reverbRef.current);
 
-      // 4. Studio Drums (Crucial: connect to destination via volume)
+      // 4. Studio Drums (Acoustic Kit - direct to destination for impact)
       drumSampler.current = new Tone.Sampler({
         urls: {
           "C1": "kick.mp3",
@@ -97,20 +104,20 @@ export function useAudioEngine() {
         baseUrl: "https://tonejs.github.io/audio/drum-samples/acoustic-kit/",
       }).connect(volRef.current);
 
-      // 5. Orchestral Violin
+      // 5. Orchestral Violin (Custom Synthesis)
       violinSynth.current = new Tone.PolySynth(Tone.Synth, {
         oscillator: { type: "sawtooth" },
         envelope: { attack: 0.2, decay: 0.3, sustain: 0.8, release: 1.5 },
       }).connect(reverbRef.current);
 
-      // 6. Flute (FM Synthesis)
+      // 6. Silver Flute (Custom FM Synthesis)
       fluteSynth.current = new Tone.PolySynth(Tone.FMSynth, {
         modulationIndex: 12,
         harmonicity: 1.5,
         envelope: { attack: 0.1, decay: 0.2, sustain: 0.3, release: 1 }
       }).connect(reverbRef.current);
 
-      // 7. Ukulele (Plucky Synthesis)
+      // 7. Ukulele (Custom Plucky Sound)
       ukuleleSynth.current = new Tone.PolySynth(Tone.Synth, {
         oscillator: { type: "triangle" },
         envelope: { attack: 0.005, decay: 0.1, sustain: 0.2, release: 1 }
@@ -124,11 +131,11 @@ export function useAudioEngine() {
         envelope: { attack: 0.001, decay: 0.2, sustain: 0 }
       }).connect(volRef.current);
 
-      // Wait for all buffers, but don't hang indefinitely if one fails
-      await Tone.loaded().catch(e => console.warn("Some buffers failed to load:", e));
+      // Finalizing: wait for all buffers to be ready
+      await Tone.loaded();
       setIsLoaded(true);
     } catch (error) {
-      console.error("Audio engine failed:", error);
+      console.error("Audio engine initialization failed:", error);
     } finally {
       setIsInitializing(false);
     }
