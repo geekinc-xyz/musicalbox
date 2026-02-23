@@ -14,16 +14,32 @@ export function Metronome({ onTick }: MetronomeProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [beat, setBeat] = useState(0);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  // Store the tick callback in a ref to avoid effect closure issues with setInterval
+  const onTickRef = useRef(onTick);
+
+  useEffect(() => {
+    onTickRef.current = onTick;
+  }, [onTick]);
 
   useEffect(() => {
     if (isPlaying) {
       const interval = (60 / bpm) * 1000;
+      
+      // We'll manage the beat locally inside the interval to avoid side effects in state setters
+      // and ensure audio triggers immediately with the timer tick.
+      let localBeat = 0;
+      
       timerRef.current = setInterval(() => {
-        setBeat((prev) => {
-          const nextBeat = (prev + 1) % 4;
-          if (onTick) onTick(nextBeat === 0);
-          return nextBeat;
-        });
+        // Increment beat
+        localBeat = (localBeat + 1) % 4;
+        
+        // Trigger visual state update (UI)
+        setBeat(localBeat);
+        
+        // Trigger audio callback (Audio)
+        if (onTickRef.current) {
+          onTickRef.current(localBeat === 0);
+        }
       }, interval);
     } else {
       if (timerRef.current) clearInterval(timerRef.current);
@@ -32,7 +48,7 @@ export function Metronome({ onTick }: MetronomeProps) {
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, [isPlaying, bpm, onTick]);
+  }, [isPlaying, bpm]);
 
   const adjustBpm = (val: number) => {
     setBpm(prev => {

@@ -112,34 +112,36 @@ export function useAudioEngine() {
 
   const playNote = useCallback((note: string, type: 'melodic' | 'percussive' = 'melodic') => {
     if (!isLoaded) return;
+    const time = Tone.now();
     
     if (type === 'melodic') {
       if (currentInstrument.current?.id === 'piano' && samplerRef.current) {
         // Only trigger if the buffers are actually loaded to prevent runtime crashes
         if (samplerRef.current.loaded) {
-          samplerRef.current.triggerAttack(note);
+          samplerRef.current.triggerAttack(note, time);
         }
       } else if (synthRef.current) {
-        synthRef.current.triggerAttack(note);
+        synthRef.current.triggerAttack(note, time);
       }
       setActiveNotes(prev => new Set(prev).add(note));
     } else if (type === 'percussive' && drumSamplerRef.current) {
       if (drumSamplerRef.current.loaded) {
-        drumSamplerRef.current.triggerAttack(note);
+        drumSamplerRef.current.triggerAttack(note, time);
       }
     }
   }, [isLoaded]);
 
   const stopNote = useCallback((note: string, type: 'melodic' | 'percussive' = 'melodic') => {
     if (!isLoaded) return;
+    const time = Tone.now();
     
     if (type === 'melodic') {
       if (currentInstrument.current?.id === 'piano' && samplerRef.current) {
         if (samplerRef.current.loaded) {
-          samplerRef.current.triggerRelease(note);
+          samplerRef.current.triggerRelease(note, time);
         }
       } else if (synthRef.current) {
-        synthRef.current.triggerRelease(note);
+        synthRef.current.triggerRelease(note, time);
       }
       setActiveNotes(prev => {
         const next = new Set(prev);
@@ -151,7 +153,8 @@ export function useAudioEngine() {
 
   const playTick = useCallback((isHigh: boolean = false) => {
     if (!isLoaded || !tickSynthRef.current) return;
-    tickSynthRef.current.triggerAttackRelease(isHigh ? "C3" : "C2", "16n");
+    // Explicitly use Tone.now() to ensure strict scheduling order and avoid overlaps
+    tickSynthRef.current.triggerAttackRelease(isHigh ? "C3" : "C2", "16n", Tone.now());
   }, [isLoaded]);
 
   useEffect(() => {
