@@ -1,3 +1,4 @@
+
 "use client"
 
 import { useState, useEffect } from 'react';
@@ -50,6 +51,9 @@ export default function Home() {
   const [selectedInstrument, setSelectedInstrument] = useState<Instrument>(INSTRUMENTS[0]);
   const [accentColor, setAccentColor] = useState('#4F55EE');
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
+  
+  // Telemetry state to avoid hydration mismatch from Math.random()
+  const [telemetry, setTelemetry] = useState({ left: 0, right: 0 });
 
   // Handle keyboard controls
   useKeyboardControls({
@@ -64,6 +68,21 @@ export default function Home() {
     }
   }, [selectedInstrument, isLoaded, loadInstrument]);
 
+  // Telemetry animation loop
+  useEffect(() => {
+    if (activeNotes.size > 0) {
+      const interval = setInterval(() => {
+        setTelemetry({
+          left: 55 + Math.random() * 25,
+          right: 55 + Math.random() * 25
+        });
+      }, 100);
+      return () => clearInterval(interval);
+    } else {
+      setTelemetry({ left: 0, right: 0 });
+    }
+  }, [activeNotes.size]);
+
   const toggleTheme = () => {
     const newTheme = theme === 'dark' ? 'light' : 'dark';
     setTheme(newTheme);
@@ -73,6 +92,8 @@ export default function Home() {
       document.documentElement.classList.remove('dark');
     }
   };
+
+  const peakHeadroom = (volume + 60) * 1.6;
 
   return (
     <div className={cn("flex-1 flex flex-col h-screen overflow-hidden transition-colors duration-500 font-body", theme === 'dark' ? 'bg-[#1A161C] text-white' : 'bg-white text-black')}>
@@ -278,9 +299,9 @@ export default function Home() {
                 </div>
                 <div className="space-y-6">
                   {[
-                    { label: 'LEFT CHANNEL', val: activeNotes.size > 0 ? 55 + Math.random() * 25 : 0, color: 'bg-accent' },
-                    { label: 'RIGHT CHANNEL', val: activeNotes.size > 0 ? 55 + Math.random() * 25 : 0, color: 'bg-primary' },
-                    { label: 'PEAK HEADROOM', val: (volume + 60) * 1.6, color: 'bg-emerald-500' }
+                    { label: 'LEFT CHANNEL', val: telemetry.left, color: 'bg-accent' },
+                    { label: 'RIGHT CHANNEL', val: telemetry.right, color: 'bg-primary' },
+                    { label: 'PEAK HEADROOM', val: peakHeadroom, color: 'bg-emerald-500' }
                   ].map((meter) => (
                     <div key={meter.label} className="space-y-2.5">
                       <div className="flex justify-between text-[9px] font-black uppercase tracking-widest text-muted-foreground/80">

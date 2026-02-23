@@ -1,3 +1,4 @@
+
 "use client"
 
 import * as React from "react"
@@ -650,10 +651,12 @@ const SidebarMenuSkeleton = React.forwardRef<
     showIcon?: boolean
   }
 >(({ className, showIcon = false, ...props }, ref) => {
-  // Random width between 50 to 90%.
-  const width = React.useMemo(() => {
-    return `${Math.floor(Math.random() * 40) + 50}%`
-  }, [])
+  // Use state for width to avoid hydration mismatch from Math.random()
+  const [width, setWidth] = React.useState("80%");
+
+  React.useEffect(() => {
+    setWidth(`${Math.floor(Math.random() * 40) + 50}%`);
+  }, []);
 
   return (
     <div
@@ -718,7 +721,6 @@ const SidebarMenuSubButton = React.forwardRef<
   return (
     <Comp
       ref={ref}
-      data-sidebar="menu-sub-button"
       data-size={size}
       data-active={isActive}
       className={cn(
