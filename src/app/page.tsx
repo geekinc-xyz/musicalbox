@@ -50,6 +50,15 @@ export default function Home() {
   const [xyloLabelMode, setXyloLabelMode] = useState<'solfege' | 'alpha' | 'numeric'>('solfege');
   const [xyloColorMode, setXyloColorMode] = useState<'rainbow' | 'monochrome'>('rainbow');
 
+  useEffect(() => {
+    const savedLang = localStorage.getItem('musicalbox-lang') as 'fr' | 'en';
+    if (savedLang) setLang(savedLang);
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('musicalbox-lang', lang);
+  }, [lang]);
+
   const t = {
     fr: {
       title: "MusicalBox",
