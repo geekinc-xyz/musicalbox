@@ -9,9 +9,10 @@ interface InstrumentSelectorProps {
   onSelect: (instrument: Instrument) => void;
   label: string;
   instrumentNames: Record<string, string>;
+  categoryNames: Record<string, string>;
 }
 
-export function InstrumentSelector({ selectedId, onSelect, label, instrumentNames }: InstrumentSelectorProps) {
+export function InstrumentSelector({ selectedId, onSelect, label, instrumentNames, categoryNames }: InstrumentSelectorProps) {
   // Group by category
   const categories = Array.from(new Set(INSTRUMENTS.map(i => i.category)));
 
@@ -27,7 +28,9 @@ export function InstrumentSelector({ selectedId, onSelect, label, instrumentName
       <div className="space-y-6">
         {categories.map(category => (
           <div key={category} className="space-y-2">
-            <h4 className="px-2 text-[10px] font-bold text-muted-foreground/50 uppercase tracking-widest">{category}</h4>
+            <h4 className="px-2 text-[10px] font-bold text-muted-foreground/50 uppercase tracking-widest">
+              {categoryNames[category] || category}
+            </h4>
             <div className="grid gap-1">
               {INSTRUMENTS.filter(i => i.category === category).map((inst) => {
                 const Icon = inst.icon;

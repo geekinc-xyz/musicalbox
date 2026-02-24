@@ -52,14 +52,18 @@ export default function Home() {
       enter: "ENTRER DANS LE STUDIO",
       loading: "CHARGEMENT...",
       now_playing: "LECTURE EN COURS",
-      save: "Sauvegarder",
-      export: "Exporter",
       telemetry: "TÉLÉMÉTRIE",
       left: "GAUCHE",
       right: "DROITE",
       headroom: "RÉSERVE",
-      copyright: "© 2024 MusicalBox Studio. Tous droits réservés.",
+      copyright: "© 2026 MusicalBox, un projet GEEK Inc. Tous droits réservés.",
       rack: "RACK D'INSTRUMENTS",
+      category_names: {
+        Keyboards: "Claviers",
+        Percussion: "Percussions",
+        Mallets: "Maillets",
+        Strings: "Cordes"
+      },
       instrument_names: {
         piano: "Piano",
         drums: "Batterie",
@@ -73,14 +77,18 @@ export default function Home() {
       enter: "ENTER STUDIO",
       loading: "LOADING...",
       now_playing: "NOW PLAYING",
-      save: "Save",
-      export: "Export",
       telemetry: "TELEMETRY",
       left: "LEFT",
       right: "RIGHT",
       headroom: "HEADROOM",
-      copyright: "© 2024 MusicalBox Studio. All rights reserved.",
+      copyright: "© 2026 MusicalBox, a GEEK Inc project. All rights reserved.",
       rack: "INSTRUMENT RACK",
+      category_names: {
+        Keyboards: "Keyboards",
+        Percussion: "Percussion",
+        Mallets: "Mallets",
+        Strings: "Strings"
+      },
       instrument_names: {
         piano: "Piano",
         drums: "Drums",
@@ -194,6 +202,7 @@ export default function Home() {
               onSelect={setSelectedInstrument} 
               label={t.rack}
               instrumentNames={t.instrument_names}
+              categoryNames={t.category_names}
             />
           </ScrollArea>
         </aside>
