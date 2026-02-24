@@ -19,7 +19,8 @@ import {
   Settings,
   Sun, 
   Moon,
-  Globe
+  Globe,
+  Github
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -283,10 +284,25 @@ export default function Home() {
                 </div>
                 <p className="text-[11px] font-bold text-muted-foreground/60 uppercase tracking-widest">{t.copyright}</p>
               </div>
-              <div className="flex gap-8 text-[10px] font-black text-muted-foreground/40 uppercase tracking-widest">
-                <a href="#" className="hover:text-primary transition-colors">Privacy</a>
-                <a href="#" className="hover:text-primary transition-colors">Terms</a>
-                <a href="#" className="hover:text-primary transition-colors">Support</a>
+
+              <div className="flex flex-col md:flex-row items-center gap-8">
+                <a 
+                  href="https://github.com/geekinc-xyz/musicalbox" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all group"
+                >
+                  <Github className="w-4 h-4 text-muted-foreground group-hover:text-white" />
+                  <span className="text-[10px] font-black text-muted-foreground group-hover:text-white uppercase tracking-widest">
+                    Open-Source Project
+                  </span>
+                </a>
+
+                <div className="flex gap-8 text-[10px] font-black text-muted-foreground/40 uppercase tracking-widest">
+                  <a href="#" className="hover:text-primary transition-colors">Privacy</a>
+                  <a href="#" className="hover:text-primary transition-colors">Terms</a>
+                  <a href="#" className="hover:text-primary transition-colors">Support</a>
+                </div>
               </div>
             </footer>
           </div>
