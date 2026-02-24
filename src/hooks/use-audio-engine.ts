@@ -42,6 +42,7 @@ export function useAudioEngine() {
       setAnalyzer(fft);
       Tone.getDestination().connect(fft);
 
+      // 1. Piano Grand (Salamander)
       pianoSampler.current = new Tone.Sampler({
         urls: {
           A0: "A0.mp3", C1: "C1.mp3", "D#1": "Ds1.mp3", "F#1": "Fs1.mp3",
@@ -56,6 +57,7 @@ export function useAudioEngine() {
         baseUrl: "https://tonejs.github.io/audio/salamander/",
       }).connect(reverbRef.current);
 
+      // 2. Concert Xylophone (Local Files)
       xylophoneSampler.current = new Tone.Sampler({
         urls: {
           "C4": "Do(1).mp3",
@@ -70,6 +72,7 @@ export function useAudioEngine() {
         baseUrl: "/SonsXylo/",
       }).connect(reverbRef.current);
 
+      // 3. Drums (Remote Assets) - Use Players for individual percussive hits
       drumPlayers.current = new Tone.Players({
         urls: {
           "kick": "kick.mp3",
@@ -82,15 +85,19 @@ export function useAudioEngine() {
           "crash": "crash.mp3",
         },
         baseUrl: "https://tonejs.github.io/audio/drum-samples/acoustic-kit/",
+        onload: () => console.log("Drum kit loaded")
       }).connect(volRef.current);
 
+      // 4. Violin (Synthesis)
       violinSynth.current = new Tone.PolySynth(Tone.Synth, {
         oscillator: { type: "sawtooth" },
         envelope: { attack: 0.4, decay: 0.3, sustain: 0.8, release: 1.5 },
       }).connect(reverbRef.current);
 
+      // 5. Generic Synth fallback
       genericSynth.current = new Tone.PolySynth(Tone.Synth).connect(reverbRef.current);
 
+      // Metronome synth
       tickSynthRef.current = new Tone.MembraneSynth({
         pitchDecay: 0.05, octaves: 2,
         envelope: { attack: 0.001, decay: 0.2, sustain: 0 }
@@ -139,7 +146,7 @@ export function useAudioEngine() {
     }
   }, [isLoaded]);
 
-  const stopNote = useCallback((note: string, type: 'melodic' | 'percursive' = 'melodic') => {
+  const stopNote = useCallback((note: string, type: 'melodic' | 'percussive' = 'melodic') => {
     if (!isLoaded) return;
     const time = Tone.now();
     const inst = currentInstrument.current;

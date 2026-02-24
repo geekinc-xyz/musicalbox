@@ -51,7 +51,7 @@ export default function Home() {
   const t = {
     fr: {
       title: "MusicalBox",
-      subtitle: "VIRTUAL STUDIO 2.0",
+      subtitle: "STUDIO VIRTUEL 2.0",
       enter: "ENTRER DANS LE STUDIO",
       loading: "CHARGEMENT...",
       now_playing: "LECTURE EN COURS",
