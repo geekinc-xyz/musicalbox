@@ -1,80 +1,131 @@
-#Firebase Studio 🎵
-An open-source audio engine and virtual music studio built specifically for education and personal use. Firebase Studio provides a powerful, web-based environment to explore sound synthesis, music theory, and digital audio workstation (DAW) workflows.
+# 🎹 MusicalBox
 
-🔗 Live Demo: Firebase Studio App
+> **BETA – Virtual Studio 2.0**
 
-##✨ Features
-Real-time Audio Engine: High-performance sound processing using the Web Audio API.
+MusicalBox is an interactive virtual music studio accessible directly from your browser.  
+It allows users to play multiple instruments, adjust audio effects, and experiment with sound in real time through a modern studio-inspired interface.
+### [Open in your browser](https://musicalbox.geek-inc.xyz)
 
-Virtual Music Studio: A complete interface for composing, arranging, and mixing tracks directly in your browser.
+---
 
-Educational Focus: Designed to help students and hobbyists visualize sound waves, understand synthesis (LFO, Filters, Envelopes), and learn sequencing.
+# 📸 Preview
 
-Cloud-Ready: Leverages modern cloud infrastructure for a seamless development and deployment experience.
+![MusicalBox Screenshot](./screenshot.png)
 
-Extensible Architecture: Built with an open-source mindset, making it easy to add new instruments, effects, or MIDI support.
+---
 
-##🚀 Getting Started
-To run this project locally for development:
+# 🧠 Description
 
-Clone the repository:
+MusicalBox transforms your browser into a fully interactive music studio.
 
-Bash
-git clone https://github.com/your-username/firebase-studio.git
-cd firebase-studio
-Install dependencies:
+With MusicalBox, you can:
 
-Bash
+- 🎹 Play an interactive **Piano**
+- 🥁 Use a realistic **Drum Kit**
+- 🎼 Experiment with a **Xylophone**
+- 🎻 Play a **Violin**
+- 🎛️ Adjust **Master Volume**
+- 🌊 Modify **Studio Reverb**
+- ⏱️ Control **Tempo (BPM)**
+- 🎨 Customize the visual interface style
+- 🌍 Use multi-language support
+
+---
+
+# 🚀 Features
+
+## 🎼 Available Instruments
+- Piano
+- Drums
+- Xylophone
+- Violin
+
+## 🎚️ Audio Controls
+- Master Volume
+- Studio Reverb
+- Dynamic Tempo Control
+
+## 🎨 Interface
+- Modern studio-style dark UI
+- Responsive design
+- Smooth and fluid interaction
+- Clean and minimal components
+
+---
+
+# 🛠️ Technologies Used
+
+- Next.js 15  
+- React  
+- Tailwind CSS  
+- ShadCN UI  
+- Lucide React  
+- Tone.js (Web Audio Framework)  
+- Web Audio API  
+
+---
+
+# 📥 Local Installation
+
+```bash
+git clone https://github.com/YOUR-USERNAME/musicalbox.git
+cd musicalbox
 npm install
-Launch the development server:
-
-Bash
 npm run dev
+```
 
-##🛠️ Technical Stack
-Audio Core: Web Audio API & AudioWorklets.
+Then open:
 
-Cloud Services: Firebase (Hosting, Firestore, Authentication).
+```
+http://localhost:3000
+```
 
-Environment: Developed using Google Cloud Workstations.
+*(Adjust if your setup differs.)*
 
-##🎓 Educational Use Cases
-This studio is a perfect tool for:
+---
 
-Schools & Bootcamps: Teaching the physics of sound and digital music production.
+# 🧪 Testing
 
-Workshops: Interactive sessions on FM/AM synthesis and step sequencing.
+- Ensure Web Audio API is supported in your browser
+- Test each instrument
+- Verify volume, tempo, and reverb adjustments
+- Confirm UI responsiveness across devices
 
-Self-Study: Personal experimentation with DSP (Digital Signal Processing).
+---
 
-##💎 Credits and Resources
-Built With
-Web Audio API: The backbone of the audio engine.
+# 👏 Contributing
 
-Firebase: For robust backend infrastructure and real-time data sync.
+Contributions are welcome!
 
-Google Cloud Workstations: The managed development environment used to build this studio.
+1. Fork the repository  
+2. Create a branch (`feature/your-feature`)  
+3. Commit your changes  
+4. Push to your branch  
+5. Open a Pull Request  
 
-Learning Resources
-Ableton Learning Synths: A great companion resource for understanding the concepts implemented in this engine.
+---
 
-Web Audio Weekly: Inspiration and technical deep-dives into web-based sound.
+# 🙌 Credits & Resources
 
-Contributors
-Special thanks to the open-source community for the libraries and inspiration that made this project possible.
+MusicalBox is an open-source project born from a passion for music and code.  
+Here are the resources that made this virtual studio possible:
 
-##🤝 Contributing
-Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are greatly appreciated.
+## 🎧 Audio Engine
+- **Tone.js** — Web Audio framework for sequencing and synthesis  
+- **Salamander Grand Piano** — High-quality piano samples by Alexander Holm  
+- **Acoustic Drum Kit** — Official Tone.js sample library  
+- **PlayXylo.com** — High-fidelity xylophone samples  
 
-Fork the Project.
+## 🎨 UI & Framework
+- **Next.js 15** — React framework for performance and routing  
+- **Tailwind CSS** — Modern utility-first styling  
+- **ShadCN UI** — Elegant and accessible UI components  
+- **Lucide React** — Minimalist icon library  
 
-Create your Feature Branch (git checkout -b feature/AmazingFeature).
+---
 
-Commit your Changes (git commit -m 'Add some AmazingFeature').
+# 📄 License
 
-Push to the Branch (git push origin feature/AmazingFeature).
+MIT License  
 
-Open a Pull Request.
-
-##📄 License
-Distributed under the MIT License. See LICENSE for more information.
+© 2026 MusicalBox — A GEEK Inc. Project
