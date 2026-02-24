@@ -67,8 +67,8 @@ export function useAudioEngine() {
         baseUrl: "https://tonejs.github.io/audio/salamander/",
       }).connect(reverbRef.current);
 
-      // 2. Xylophone avec VOS fichiers locaux renommés
-      // IMPORTANT: Le dossier SonsXylo doit être dans le dossier /public/
+      // 2. Xylophone avec VOS fichiers locaux
+      // IMPORTANT: Le dossier SonsXylo doit être dans /public/SonsXylo/
       xylophoneSampler.current = new Tone.Sampler({
         urls: {
           "C4": "Do(1).mp3",
