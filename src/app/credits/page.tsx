@@ -63,6 +63,7 @@ export default function CreditsPage() {
                 <li><strong className="text-white">Tone.js</strong> — Le framework Web Audio pour le séquençage et la synthèse.</li>
                 <li><strong className="text-white">Salamander Grand Piano</strong> — Échantillons de piano haute qualité par Alexander Holm.</li>
                 <li><strong className="text-white">Acoustic Drum Kit</strong> — Banque de sons officiels de Tone.js.</li>
+                <li><strong className="text-white">PlayXylo.com</strong> — Échantillons sonores de xylophone haute fidélité.</li>
               </ul>
             </div>
 
