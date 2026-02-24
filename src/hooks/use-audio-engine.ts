@@ -88,7 +88,7 @@ export function useAudioEngine() {
         baseUrl: "https://tonejs.github.io/audio/berklee/",
       }).connect(reverbRef.current);
 
-      // 4. Drums Acoustiques
+      // 4. Drums Acoustiques (Correction du routage)
       drumSampler.current = new Tone.Sampler({
         urls: {
           "C1": "kick.mp3",
@@ -186,7 +186,7 @@ export function useAudioEngine() {
     }
   }, [isLoaded]);
 
-  const stopNote = useCallback((note: string, type: 'melodic' | 'percussive' = 'melodic') => {
+  const stopNote = useCallback((note: string, type: 'melodic' | 'percursive' = 'melodic') => {
     if (!isLoaded) return;
     const time = Tone.now();
     const inst = currentInstrument.current;
