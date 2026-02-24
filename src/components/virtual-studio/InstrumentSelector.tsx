@@ -1,15 +1,17 @@
+
 "use client"
 
 import { INSTRUMENTS, Instrument } from "@/lib/instruments"
 import { cn } from "@/lib/utils"
-import { ChevronRight, Music, Layers } from "lucide-react"
+import { ChevronRight, Layers } from "lucide-react"
 
 interface InstrumentSelectorProps {
   selectedId: string;
   onSelect: (instrument: Instrument) => void;
+  label: string;
 }
 
-export function InstrumentSelector({ selectedId, onSelect }: InstrumentSelectorProps) {
+export function InstrumentSelector({ selectedId, onSelect, label }: InstrumentSelectorProps) {
   // Group by category
   const categories = Array.from(new Set(INSTRUMENTS.map(i => i.category)));
 
@@ -18,7 +20,7 @@ export function InstrumentSelector({ selectedId, onSelect }: InstrumentSelectorP
       <div className="flex items-center justify-between px-2">
         <div className="flex items-center gap-2">
           <Layers className="w-4 h-4 text-primary" />
-          <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-muted-foreground">Instrument Rack</h3>
+          <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-muted-foreground">{label}</h3>
         </div>
         <div className="px-2 py-0.5 rounded-full bg-primary/10 text-[9px] font-bold text-primary border border-primary/20">
           PRO

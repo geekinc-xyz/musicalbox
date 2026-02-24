@@ -8,6 +8,7 @@ interface XylophoneProps {
   onPlay: (note: string) => void;
   onStop: (note: string) => void;
   activeNotes: Set<string>;
+  lang: 'fr' | 'en';
 }
 
 const XYLOPHONE_BARS = [
@@ -21,25 +22,26 @@ const XYLOPHONE_BARS = [
   { note: 'C5', color: 'bg-[#ff4dff]', height: 'h-[220px]' },
 ];
 
-export function Xylophone({ onPlay, onStop, activeNotes }: XylophoneProps) {
+export function Xylophone({ onPlay, onStop, activeNotes, lang }: XylophoneProps) {
   const [pressedNote, setPressedNote] = useState<string | null>(null);
 
   const handlePress = (note: string) => {
     onPlay(note);
     setPressedNote(note);
-    // Visual and audio feedback duration matches the percussive nature of the xylophone
     setTimeout(() => {
       setPressedNote(null);
       onStop(note);
     }, 150);
   };
 
+  const instruction = lang === 'fr' 
+    ? "TAPPEZ SUR LES LAMES OU UTILISEZ LES TOUCHES (A-K)" 
+    : "TAP THE BARS OR USE KEYS (A-K)";
+
   return (
     <div className="flex flex-col items-center gap-12 py-14 w-full max-w-6xl mx-auto">
-      {/* Wooden Resonance Frame inspired by PlayXylo */}
       <div className="relative flex items-center justify-center p-10 md:p-14 bg-[#5d3a2f] rounded-[3.5rem] shadow-[0_40px_80px_-15px_rgba(0,0,0,0.9)] border-b-[12px] border-[#3a241d] transition-all overflow-hidden ring-1 ring-white/10">
         
-        {/* Support Rails */}
         <div className="absolute top-[28%] left-0 right-0 h-4 bg-[#3a241d]/50 shadow-inner" />
         <div className="absolute bottom-[28%] left-0 right-0 h-4 bg-[#3a241d]/50 shadow-inner" />
 
@@ -60,7 +62,6 @@ export function Xylophone({ onPlay, onStop, activeNotes }: XylophoneProps) {
                   isActive && "scale-[0.94] translate-y-4 brightness-125 shadow-inner"
                 )}
               >
-                {/* Mounting Bolts */}
                 <div className="absolute top-12 w-4 h-4 rounded-full bg-neutral-200 shadow-lg border border-neutral-600/40 flex items-center justify-center">
                   <div className="w-1 h-1 bg-neutral-600/50 rounded-full" />
                 </div>
@@ -69,14 +70,12 @@ export function Xylophone({ onPlay, onStop, activeNotes }: XylophoneProps) {
                    <div className="w-1 h-1 bg-neutral-600/50 rounded-full" />
                 </div>
                 
-                {/* Note Label */}
                 <div className="mt-auto mb-20 select-none">
                    <span className="text-white font-black text-2xl md:text-4xl tracking-tighter drop-shadow-[0_3px_6px_rgba(0,0,0,0.6)] opacity-90 group-hover:opacity-100 transition-opacity">
                     {bar.note.replace('4', '').replace('5', '')}
                    </span>
                 </div>
 
-                {/* Internal Glow Effect */}
                 <div className={cn(
                   "absolute inset-0 bg-white/25 opacity-0 transition-opacity duration-200 pointer-events-none rounded-2xl",
                   isActive && "opacity-100"
@@ -89,7 +88,7 @@ export function Xylophone({ onPlay, onStop, activeNotes }: XylophoneProps) {
       
       <div className="flex flex-col items-center gap-4">
         <p className="text-[12px] font-black uppercase tracking-[0.5em] text-muted-foreground/60 text-center animate-pulse">
-          TAP THE BARS OR USE KEYS (A-K)
+          {instruction}
         </p>
         <div className="flex gap-3">
           {XYLOPHONE_BARS.map(b => (

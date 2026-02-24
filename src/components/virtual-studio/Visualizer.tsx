@@ -1,3 +1,4 @@
+
 "use client"
 
 import { useEffect, useRef, useState } from 'react';
@@ -6,12 +7,18 @@ import { Activity } from 'lucide-react';
 interface VisualizerProps {
   analyzer: AnalyserNode | null;
   isActive: boolean;
+  lang: 'fr' | 'en';
 }
 
-export function Visualizer({ analyzer, isActive }: VisualizerProps) {
+export function Visualizer({ analyzer, isActive, lang }: VisualizerProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationRef = useRef<number>(0);
   const [isClient, setIsClient] = useState(false);
+
+  const t = {
+    fr: { label: "DYNAMIQUE SPECTRALE", standby: "SYSTÈME EN VEILLE" },
+    en: { label: "SPECTRAL DYNAMICS", standby: "SYSTEM STANDBY" }
+  }[lang];
 
   useEffect(() => {
     setIsClient(true);
@@ -69,7 +76,7 @@ export function Visualizer({ analyzer, isActive }: VisualizerProps) {
       <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-accent/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
       
       <div className="flex items-center justify-between">
-        <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/60">SPECTRAL DYNAMICS</h4>
+        <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/60">{t.label}</h4>
         <Activity className="w-4 h-4 text-muted-foreground/60" />
       </div>
       
@@ -82,7 +89,7 @@ export function Visualizer({ analyzer, isActive }: VisualizerProps) {
         />
         {!isActive && (
           <div className="absolute inset-0 flex items-center justify-center">
-            <span className="text-[11px] font-black uppercase tracking-[0.4em] text-muted-foreground/20 animate-pulse">SYSTEM STANDBY</span>
+            <span className="text-[11px] font-black uppercase tracking-[0.4em] text-muted-foreground/20 animate-pulse">{t.standby}</span>
           </div>
         )}
       </div>

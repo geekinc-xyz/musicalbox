@@ -1,7 +1,8 @@
+
 "use client"
 
 import { Label } from "@/components/ui/label"
-import { Speaker, Waves, Palette, Settings2, Sliders } from "lucide-react"
+import { Speaker, Waves, Palette } from "lucide-react"
 import { Slider as ShadSlider } from "@/components/ui/slider"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Button } from "@/components/ui/button"
@@ -14,6 +15,7 @@ interface ControlPanelProps {
   onReverbChange: (val: number) => void;
   keyColor: string;
   onKeyColorChange: (color: string) => void;
+  lang: 'fr' | 'en';
 }
 
 export function ControlPanel({ 
@@ -22,8 +24,26 @@ export function ControlPanel({
   reverb, 
   onReverbChange,
   keyColor,
-  onKeyColorChange
+  onKeyColorChange,
+  lang
 }: ControlPanelProps) {
+  const t = {
+    fr: {
+      volume: "Volume Master",
+      reverb: "Réverbération Studio",
+      visual: "Style Visuel",
+      custom: "Personnalisation Interface",
+      select: "Choisir un accent"
+    },
+    en: {
+      volume: "Master Volume",
+      reverb: "Studio Reverb",
+      visual: "Visual Style",
+      custom: "Interface Customization",
+      select: "Select Key Accent"
+    }
+  }[lang];
+
   const colors = [
     { name: 'Classic Blue', value: '#4F55EE' },
     { name: 'Emerald', value: '#10b981' },
@@ -44,7 +64,7 @@ export function ControlPanel({
         </div>
         <div className="flex-1 space-y-3">
           <div className="flex justify-between items-center">
-            <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Master Volume</Label>
+            <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{t.volume}</Label>
             <span className="text-[10px] font-mono bg-accent/10 px-2 py-0.5 rounded text-accent">
               {Math.round(((volume + 60) / 60) * 100)}%
             </span>
@@ -66,7 +86,7 @@ export function ControlPanel({
         </div>
         <div className="flex-1 space-y-3">
           <div className="flex justify-between items-center">
-            <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Studio Reverb</Label>
+            <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{t.reverb}</Label>
             <span className="text-[10px] font-mono bg-primary/10 px-2 py-0.5 rounded text-primary">
               {Math.round(reverb * 100)}%
             </span>
@@ -84,8 +104,8 @@ export function ControlPanel({
 
       <div className="flex items-center justify-between gap-4 p-4 rounded-2xl bg-black/20 border border-white/5">
         <div className="flex flex-col gap-1">
-          <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Visual Style</span>
-          <span className="text-xs font-bold text-white">Interface Customization</span>
+          <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{t.visual}</span>
+          <span className="text-xs font-bold text-white">{t.custom}</span>
         </div>
         
         <Popover>
@@ -97,7 +117,7 @@ export function ControlPanel({
           <PopoverContent className="w-72 p-4 bg-neutral-900 border-white/10 shadow-3xl rounded-2xl" side="top" align="end">
             <div className="flex items-center gap-2 mb-4 px-1">
               <Palette className="w-4 h-4 text-accent" />
-              <h4 className="text-xs font-black uppercase tracking-widest">Select Key Accent</h4>
+              <h4 className="text-xs font-black uppercase tracking-widest">{t.select}</h4>
             </div>
             <div className="grid grid-cols-3 gap-3">
               {colors.map((c) => (

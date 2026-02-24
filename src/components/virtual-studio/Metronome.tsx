@@ -1,3 +1,4 @@
+
 "use client"
 
 import { useState, useEffect, useRef } from 'react';
@@ -7,14 +8,14 @@ import { cn } from '@/lib/utils';
 
 interface MetronomeProps {
   onTick?: (isHigh: boolean) => void;
+  lang: 'fr' | 'en';
 }
 
-export function Metronome({ onTick }: MetronomeProps) {
+export function Metronome({ onTick, lang }: MetronomeProps) {
   const [bpm, setBpm] = useState(120);
   const [isPlaying, setIsPlaying] = useState(false);
   const [beat, setBeat] = useState(0);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
-  // Store the tick callback in a ref to avoid effect closure issues with setInterval
   const onTickRef = useRef(onTick);
 
   useEffect(() => {
@@ -24,19 +25,11 @@ export function Metronome({ onTick }: MetronomeProps) {
   useEffect(() => {
     if (isPlaying) {
       const interval = (60 / bpm) * 1000;
-      
-      // We'll manage the beat locally inside the interval to avoid side effects in state setters
-      // and ensure audio triggers immediately with the timer tick.
       let localBeat = 0;
       
       timerRef.current = setInterval(() => {
-        // Increment beat
         localBeat = (localBeat + 1) % 4;
-        
-        // Trigger visual state update (UI)
         setBeat(localBeat);
-        
-        // Trigger audio callback (Audio)
         if (onTickRef.current) {
           onTickRef.current(localBeat === 0);
         }
@@ -60,7 +53,7 @@ export function Metronome({ onTick }: MetronomeProps) {
   return (
     <div className="flex items-center gap-5 bg-muted/20 backdrop-blur-md p-5 rounded-[2rem] border border-border/40 shadow-xl">
       <div className="flex flex-col items-end min-w-[70px]">
-        <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest opacity-60">TEMPO</span>
+        <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest opacity-60">{lang === 'fr' ? 'TEMPO' : 'TEMPO'}</span>
         <div className="flex items-center gap-2">
           <span className="text-3xl font-black font-mono tracking-tighter tabular-nums leading-none">{Math.round(bpm)}</span>
         </div>
