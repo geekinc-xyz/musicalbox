@@ -8,9 +8,10 @@ interface KeyboardProps {
   onStop: (note: string) => void;
   activeNotes: Set<string>;
   accentColor: string;
+  labelMode?: 'solfege' | 'alpha' | 'numeric';
 }
 
-export function Keyboard({ onPlay, onStop, activeNotes, accentColor }: KeyboardProps) {
+export function Keyboard({ onPlay, onStop, activeNotes, accentColor, labelMode = 'alpha' }: KeyboardProps) {
   const handleMouseEnter = (e: React.MouseEvent, note: string) => {
     // Check if left mouse button is pressed (1)
     if (e.buttons === 1) {
@@ -23,6 +24,9 @@ export function Keyboard({ onPlay, onStop, activeNotes, accentColor }: KeyboardP
       <div className="flex h-[320px] bg-neutral-900 p-3 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] border border-white/5 relative">
         {PIANO_KEYS.map((key) => {
           const isActive = activeNotes.has(key.note);
+          // @ts-ignore
+          const currentLabel = key[labelMode] || key.label;
+          
           return (
             <div
               key={key.note}
@@ -54,11 +58,11 @@ export function Keyboard({ onPlay, onStop, activeNotes, accentColor }: KeyboardP
               )} style={{ backgroundColor: accentColor }} />
               
               <span className={cn(
-                "text-[10px] font-bold tracking-tighter transition-colors pointer-events-none",
-                key.isBlack ? "text-neutral-500" : "text-neutral-300 group-hover:text-neutral-500",
+                "text-[10px] font-bold tracking-tighter transition-colors pointer-events-none text-center px-1",
+                key.isBlack ? "text-neutral-500" : "text-neutral-400 group-hover:text-neutral-600",
                 isActive && "text-white"
               )}>
-                {key.label}
+                {currentLabel}
               </span>
             </div>
           );

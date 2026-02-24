@@ -1,4 +1,3 @@
-
 "use client"
 
 import { useState, useEffect } from 'react';
@@ -273,6 +272,7 @@ export default function Home() {
                     onStop={(note) => stopNote(note, 'melodic')}
                     activeNotes={activeNotes}
                     accentColor={accentColor}
+                    labelMode={xyloLabelMode}
                   />
                 ) : (
                   <DrumPads 

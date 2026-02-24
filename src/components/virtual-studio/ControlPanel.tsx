@@ -1,4 +1,3 @@
-
 "use client"
 
 import { Label } from "@/components/ui/label"
@@ -44,8 +43,8 @@ export function ControlPanel({
       visual: "Style Visuel",
       custom: "Personnalisation Interface",
       select: "Choisir un accent",
-      labels: "Étiquettes Xylo",
-      colors: "Mode Couleurs",
+      labels: "Étiquettes des notes",
+      colors: "Mode Couleurs (Xylo)",
       modes: {
         solfege: "Do-Ré-Mi",
         alpha: "A-B-C",
@@ -60,8 +59,8 @@ export function ControlPanel({
       visual: "Visual Style",
       custom: "Interface Customization",
       select: "Select Key Accent",
-      labels: "Xylo Labels",
-      colors: "Color Mode",
+      labels: "Note Labels",
+      colors: "Color Mode (Xylo)",
       modes: {
         solfege: "Do-Re-Mi",
         alpha: "A-B-C",
