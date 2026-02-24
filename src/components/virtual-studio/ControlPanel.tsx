@@ -2,10 +2,12 @@
 "use client"
 
 import { Label } from "@/components/ui/label"
-import { Speaker, Waves, Palette } from "lucide-react"
+import { Speaker, Waves, Palette, Type, Paintbrush } from "lucide-react"
 import { Slider as ShadSlider } from "@/components/ui/slider"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Button } from "@/components/ui/button"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { cn } from "@/lib/utils"
 
 interface ControlPanelProps {
@@ -15,6 +17,10 @@ interface ControlPanelProps {
   onReverbChange: (val: number) => void;
   keyColor: string;
   onKeyColorChange: (color: string) => void;
+  xyloLabelMode: 'solfege' | 'alpha' | 'numeric';
+  onXyloLabelModeChange: (mode: 'solfege' | 'alpha' | 'numeric') => void;
+  xyloColorMode: 'rainbow' | 'monochrome';
+  onXyloColorModeChange: (mode: 'rainbow' | 'monochrome') => void;
   lang: 'fr' | 'en';
 }
 
@@ -25,6 +31,10 @@ export function ControlPanel({
   onReverbChange,
   keyColor,
   onKeyColorChange,
+  xyloLabelMode,
+  onXyloLabelModeChange,
+  xyloColorMode,
+  onXyloColorModeChange,
   lang
 }: ControlPanelProps) {
   const t = {
@@ -33,14 +43,32 @@ export function ControlPanel({
       reverb: "Réverbération Studio",
       visual: "Style Visuel",
       custom: "Personnalisation Interface",
-      select: "Choisir un accent"
+      select: "Choisir un accent",
+      labels: "Étiquettes Xylo",
+      colors: "Mode Couleurs",
+      modes: {
+        solfege: "Do-Ré-Mi",
+        alpha: "A-B-C",
+        numeric: "1-2-3",
+        rainbow: "Arc-en-ciel",
+        monochrome: "Monochrome"
+      }
     },
     en: {
       volume: "Master Volume",
       reverb: "Studio Reverb",
       visual: "Visual Style",
       custom: "Interface Customization",
-      select: "Select Key Accent"
+      select: "Select Key Accent",
+      labels: "Xylo Labels",
+      colors: "Color Mode",
+      modes: {
+        solfege: "Do-Re-Mi",
+        alpha: "A-B-C",
+        numeric: "1-2-3",
+        rainbow: "Rainbow",
+        monochrome: "Monochrome"
+      }
     }
   }[lang];
 
@@ -58,7 +86,6 @@ export function ControlPanel({
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-6 bg-white/70 dark:bg-neutral-900/50 backdrop-blur-xl rounded-[2.5rem] border border-black/5 dark:border-white/5 shadow-2xl transition-colors duration-500">
-      {/* Volume Section */}
       <div className="flex items-center gap-5 p-4 rounded-3xl bg-neutral-100/50 dark:bg-black/20 border border-black/5 dark:border-white/5 transition-colors">
         <div className="p-3 rounded-2xl bg-accent/10 dark:bg-accent/20 text-accent ring-1 ring-accent/20">
           <Speaker className="w-5 h-5" />
@@ -81,7 +108,6 @@ export function ControlPanel({
         </div>
       </div>
 
-      {/* Reverb Section */}
       <div className="flex items-center gap-5 p-4 rounded-3xl bg-neutral-100/50 dark:bg-black/20 border border-black/5 dark:border-white/5 transition-colors">
         <div className="p-3 rounded-2xl bg-primary/10 dark:bg-primary/20 text-primary ring-1 ring-primary/20">
           <Waves className="w-5 h-5" />
@@ -104,7 +130,6 @@ export function ControlPanel({
         </div>
       </div>
 
-      {/* Customization Section */}
       <div className="flex items-center justify-between gap-4 p-4 rounded-3xl bg-neutral-100/50 dark:bg-black/20 border border-black/5 dark:border-white/5 transition-colors">
         <div className="flex flex-col gap-1 pl-2">
           <span className="text-[10px] font-black uppercase tracking-widest text-neutral-500 dark:text-muted-foreground">{t.visual}</span>
@@ -117,30 +142,62 @@ export function ControlPanel({
               <div className="w-6 h-6 rounded-lg shadow-inner" style={{ backgroundColor: keyColor }} />
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-72 p-5 bg-white dark:bg-neutral-900 border-black/5 dark:border-white/10 shadow-3xl rounded-[2rem] backdrop-blur-xl" side="top" align="end">
-            <div className="flex items-center gap-2 mb-4 px-1">
-              <Palette className="w-4 h-4 text-accent" />
-              <h4 className="text-[10px] font-black uppercase tracking-[0.2em]">{t.select}</h4>
+          <PopoverContent className="w-80 p-6 bg-white dark:bg-neutral-900 border-black/5 dark:border-white/10 shadow-3xl rounded-[2rem] backdrop-blur-xl space-y-6" side="top" align="end">
+            <div className="space-y-4">
+              <div className="flex items-center gap-2 px-1">
+                <Palette className="w-4 h-4 text-accent" />
+                <h4 className="text-[10px] font-black uppercase tracking-[0.2em]">{t.select}</h4>
+              </div>
+              <div className="grid grid-cols-3 gap-2">
+                {colors.map((c) => (
+                  <button
+                    key={c.value}
+                    onClick={() => onKeyColorChange(c.value)}
+                    className={cn(
+                      "group relative w-full h-10 rounded-xl transition-all duration-300 border-2 overflow-hidden",
+                      keyColor === c.value 
+                        ? "border-accent scale-105" 
+                        : "border-transparent opacity-60 hover:opacity-100"
+                    )}
+                    style={{ backgroundColor: c.value }}
+                    title={c.name}
+                  >
+                    {keyColor === c.value && (
+                      <div className="absolute inset-0 bg-white/20 animate-pulse" />
+                    )}
+                  </button>
+                ))}
+              </div>
             </div>
-            <div className="grid grid-cols-3 gap-3">
-              {colors.map((c) => (
-                <button
-                  key={c.value}
-                  onClick={() => onKeyColorChange(c.value)}
-                  className={cn(
-                    "group relative w-full h-12 rounded-xl transition-all duration-300 border-2 overflow-hidden shadow-sm",
-                    keyColor === c.value 
-                      ? "border-accent scale-110 shadow-accent/20" 
-                      : "border-transparent hover:scale-105 hover:shadow-md"
-                  )}
-                  style={{ backgroundColor: c.value }}
-                  title={c.name}
-                >
-                  {keyColor === c.value && (
-                    <div className="absolute inset-0 bg-white/20 animate-pulse" />
-                  )}
-                </button>
-              ))}
+
+            <div className="space-y-4 pt-2 border-t border-border/20">
+              <div className="flex items-center gap-2 px-1">
+                <Type className="w-4 h-4 text-primary" />
+                <h4 className="text-[10px] font-black uppercase tracking-[0.2em]">{t.labels}</h4>
+              </div>
+              <Select value={xyloLabelMode} onValueChange={(val: any) => onXyloLabelModeChange(val)}>
+                <SelectTrigger className="rounded-xl h-10 text-xs font-bold uppercase tracking-widest">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent className="rounded-xl">
+                  <SelectItem value="solfege">{t.modes.solfege}</SelectItem>
+                  <SelectItem value="alpha">{t.modes.alpha}</SelectItem>
+                  <SelectItem value="numeric">{t.modes.numeric}</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-4 pt-2 border-t border-border/20">
+              <div className="flex items-center gap-2 px-1">
+                <Paintbrush className="w-4 h-4 text-emerald-500" />
+                <h4 className="text-[10px] font-black uppercase tracking-[0.2em]">{t.colors}</h4>
+              </div>
+              <Tabs value={xyloColorMode} onValueChange={(val: any) => onXyloColorModeChange(val)}>
+                <TabsList className="grid grid-cols-2 rounded-xl h-10">
+                  <TabsTrigger value="rainbow" className="text-[10px] font-black uppercase tracking-tighter">{t.modes.rainbow}</TabsTrigger>
+                  <TabsTrigger value="monochrome" className="text-[10px] font-black uppercase tracking-tighter">{t.modes.monochrome}</TabsTrigger>
+                </TabsList>
+              </Tabs>
             </div>
           </PopoverContent>
         </Popover>

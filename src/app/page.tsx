@@ -1,3 +1,4 @@
+
 "use client"
 
 import { useState, useEffect } from 'react';
@@ -44,6 +45,10 @@ export default function Home() {
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
   const [telemetry, setTelemetry] = useState({ left: 0, right: 0 });
   const [lang, setLang] = useState<'fr' | 'en'>('fr');
+  
+  // Customization state
+  const [xyloLabelMode, setXyloLabelMode] = useState<'solfege' | 'alpha' | 'numeric'>('solfege');
+  const [xyloColorMode, setXyloColorMode] = useState<'rainbow' | 'monochrome'>('rainbow');
 
   const t = {
     fr: {
@@ -140,7 +145,6 @@ export default function Home() {
     <div className={cn("flex-1 flex flex-col h-screen overflow-hidden transition-all duration-700 font-body", 
       theme === 'dark' ? 'bg-[#1A161C] text-white' : 'bg-neutral-50 text-neutral-900')}>
       
-      {/* Dynamic Studio Glows */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none transition-opacity duration-1000">
         {theme === 'dark' ? (
           <>
@@ -244,6 +248,10 @@ export default function Home() {
               onReverbChange={setReverbMix} 
               keyColor={accentColor} 
               onKeyColorChange={setAccentColor}
+              xyloLabelMode={xyloLabelMode}
+              onXyloLabelModeChange={setXyloLabelMode}
+              xyloColorMode={xyloColorMode}
+              onXyloColorModeChange={setXyloColorMode}
               lang={lang}
             />
 
@@ -255,6 +263,9 @@ export default function Home() {
                     onStop={(note) => stopNote(note, 'melodic')}
                     activeNotes={activeNotes}
                     lang={lang}
+                    labelMode={xyloLabelMode}
+                    colorMode={xyloColorMode}
+                    accentColor={accentColor}
                   />
                 ) : selectedInstrument.type === 'melodic' ? (
                   <Keyboard 
