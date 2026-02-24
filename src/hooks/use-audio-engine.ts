@@ -57,7 +57,7 @@ export function useAudioEngine() {
         baseUrl: "https://tonejs.github.io/audio/salamander/",
       }).connect(reverbRef.current);
 
-      // 2. Concert Xylophone (Local Files)
+      // 2. Concert Xylophone (Fichiers Locaux renommés)
       xylophoneSampler.current = new Tone.Sampler({
         urls: {
           "C4": "Do(1).mp3",
@@ -72,7 +72,7 @@ export function useAudioEngine() {
         baseUrl: "/SonsXylo/",
       }).connect(reverbRef.current);
 
-      // 3. Drums (Remote Assets) - Use Players for individual percussive hits
+      // 3. Drums (Échantillons Internet Tone.js)
       drumPlayers.current = new Tone.Players({
         urls: {
           "kick": "kick.mp3",
@@ -85,7 +85,6 @@ export function useAudioEngine() {
           "crash": "crash.mp3",
         },
         baseUrl: "https://tonejs.github.io/audio/drum-samples/acoustic-kit/",
-        onload: () => console.log("Drum kit loaded")
       }).connect(volRef.current);
 
       // 4. Violin (Synthesis)
@@ -120,9 +119,9 @@ export function useAudioEngine() {
   const playNote = useCallback((note: string, type: 'melodic' | 'percussive' = 'melodic') => {
     if (!isLoaded) return;
     const time = Tone.now();
-    const inst = currentInstrument.current;
     
     if (type === 'melodic') {
+      const inst = currentInstrument.current;
       if (!inst) return;
 
       if (inst.id === 'piano' && pianoSampler.current?.loaded) {
@@ -137,10 +136,15 @@ export function useAudioEngine() {
       
       setActiveNotes(prev => new Set(prev).add(note));
     } else if (type === 'percussive') {
-      if (drumPlayers.current?.loaded) {
-        const player = drumPlayers.current.player(note);
-        if (player) {
-          player.start(time);
+      // Les batteries utilisent Tone.Players. On vérifie si l'échantillonneur existe et est chargé.
+      if (drumPlayers.current) {
+        try {
+          const player = drumPlayers.current.player(note);
+          if (player) {
+            player.start(time);
+          }
+        } catch (e) {
+          console.warn(`Could not play drum sample: ${note}`, e);
         }
       }
     }
@@ -149,9 +153,9 @@ export function useAudioEngine() {
   const stopNote = useCallback((note: string, type: 'melodic' | 'percussive' = 'melodic') => {
     if (!isLoaded) return;
     const time = Tone.now();
-    const inst = currentInstrument.current;
     
     if (type === 'melodic') {
+      const inst = currentInstrument.current;
       if (!inst) return;
 
       if (inst.id === 'piano' && pianoSampler.current?.loaded) {
