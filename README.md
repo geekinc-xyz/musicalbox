@@ -1,9 +1,9 @@
-Firebase Studio 🎵
+#Firebase Studio 🎵
 An open-source audio engine and virtual music studio built specifically for education and personal use. Firebase Studio provides a powerful, web-based environment to explore sound synthesis, music theory, and digital audio workstation (DAW) workflows.
 
 🔗 Live Demo: Firebase Studio App
 
-✨ Features
+##✨ Features
 Real-time Audio Engine: High-performance sound processing using the Web Audio API.
 
 Virtual Music Studio: A complete interface for composing, arranging, and mixing tracks directly in your browser.
@@ -14,7 +14,7 @@ Cloud-Ready: Leverages modern cloud infrastructure for a seamless development an
 
 Extensible Architecture: Built with an open-source mindset, making it easy to add new instruments, effects, or MIDI support.
 
-🚀 Getting Started
+##🚀 Getting Started
 To run this project locally for development:
 
 Clone the repository:
@@ -30,14 +30,15 @@ Launch the development server:
 
 Bash
 npm run dev
-🛠️ Technical Stack
+
+##🛠️ Technical Stack
 Audio Core: Web Audio API & AudioWorklets.
 
 Cloud Services: Firebase (Hosting, Firestore, Authentication).
 
 Environment: Developed using Google Cloud Workstations.
 
-🎓 Educational Use Cases
+##🎓 Educational Use Cases
 This studio is a perfect tool for:
 
 Schools & Bootcamps: Teaching the physics of sound and digital music production.
@@ -46,7 +47,7 @@ Workshops: Interactive sessions on FM/AM synthesis and step sequencing.
 
 Self-Study: Personal experimentation with DSP (Digital Signal Processing).
 
-💎 Credits and Resources
+##💎 Credits and Resources
 Built With
 Web Audio API: The backbone of the audio engine.
 
@@ -62,7 +63,7 @@ Web Audio Weekly: Inspiration and technical deep-dives into web-based sound.
 Contributors
 Special thanks to the open-source community for the libraries and inspiration that made this project possible.
 
-🤝 Contributing
+##🤝 Contributing
 Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are greatly appreciated.
 
 Fork the Project.
@@ -75,5 +76,5 @@ Push to the Branch (git push origin feature/AmazingFeature).
 
 Open a Pull Request.
 
-📄 License
+##📄 License
 Distributed under the MIT License. See LICENSE for more information.
