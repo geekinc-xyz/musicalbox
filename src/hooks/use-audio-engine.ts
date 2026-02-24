@@ -16,14 +16,10 @@ export function useAudioEngine() {
   // Samplers pour les sons réels
   const pianoSampler = useRef<Tone.Sampler | null>(null);
   const xylophoneSampler = useRef<Tone.Sampler | null>(null);
-  const guitarSampler = useRef<Tone.Sampler | null>(null);
   const drumSampler = useRef<Tone.Sampler | null>(null);
   
-  // Synthétiseurs spécifiques pour des timbres variés
+  // Synthétiseurs spécifiques
   const violinSynth = useRef<Tone.PolySynth | null>(null);
-  const fluteSynth = useRef<Tone.PolySynth | null>(null);
-  const ukuleleSynth = useRef<Tone.PolySynth | null>(null);
-  const clarinetSynth = useRef<Tone.PolySynth | null>(null);
   const genericSynth = useRef<Tone.PolySynth | null>(null);
   
   const reverbRef = useRef<Tone.Reverb | null>(null);
@@ -67,7 +63,7 @@ export function useAudioEngine() {
         baseUrl: "https://tonejs.github.io/audio/salamander/",
       }).connect(reverbRef.current);
 
-      // 2. Xylophone Local (Mapping correct Do(1), Ré(2), etc.)
+      // 2. Xylophone Local (depuis public/SonsXylo/)
       xylophoneSampler.current = new Tone.Sampler({
         urls: {
           "C4": "Do(1).mp3",
@@ -82,13 +78,7 @@ export function useAudioEngine() {
         baseUrl: "/SonsXylo/",
       }).connect(reverbRef.current);
 
-      // 3. Guitare Acoustique
-      guitarSampler.current = new Tone.Sampler({
-        urls: { "A2": "guitar_acoustic.mp3" },
-        baseUrl: "https://tonejs.github.io/audio/berklee/",
-      }).connect(reverbRef.current);
-
-      // 4. Drums Acoustiques (Correction du routage)
+      // 3. Drums Acoustiques (Connexion directe pour plus de punch)
       drumSampler.current = new Tone.Sampler({
         urls: {
           "C1": "kick.mp3",
@@ -103,30 +93,10 @@ export function useAudioEngine() {
         baseUrl: "https://tonejs.github.io/audio/drum-samples/acoustic-kit/",
       }).connect(volRef.current);
 
-      // 5. Violon Orchestral (Sawtooth douce + Attack lent)
+      // 4. Violon Orchestral (Patch Synthèse spécifique)
       violinSynth.current = new Tone.PolySynth(Tone.Synth, {
         oscillator: { type: "sawtooth" },
         envelope: { attack: 0.4, decay: 0.3, sustain: 0.8, release: 1.5 },
-      }).connect(reverbRef.current);
-
-      // 6. Flûte de Pan (FM venteuse + Harmoniques)
-      fluteSynth.current = new Tone.PolySynth(Tone.FMSynth, {
-        harmonicity: 1.5,
-        modulationIndex: 12,
-        oscillator: { type: "sine" },
-        envelope: { attack: 0.1, decay: 0.2, sustain: 0.5, release: 0.8 }
-      }).connect(reverbRef.current);
-
-      // 7. Ukulélé (Pincement sec + Triangle)
-      ukuleleSynth.current = new Tone.PolySynth(Tone.Synth, {
-        oscillator: { type: "triangle" },
-        envelope: { attack: 0.005, decay: 0.1, sustain: 0.2, release: 0.6 }
-      }).connect(reverbRef.current);
-
-      // 8. Clarinette (Square wave creuse)
-      clarinetSynth.current = new Tone.PolySynth(Tone.Synth, {
-        oscillator: { type: "square" },
-        envelope: { attack: 0.1, decay: 0.1, sustain: 0.7, release: 0.5 }
       }).connect(reverbRef.current);
 
       genericSynth.current = new Tone.PolySynth(Tone.Synth).connect(reverbRef.current);
@@ -137,7 +107,7 @@ export function useAudioEngine() {
         envelope: { attack: 0.001, decay: 0.2, sustain: 0 }
       }).connect(volRef.current);
 
-      // On attend que les buffers critiques soient chargés
+      // Attente du chargement complet des buffers
       await Tone.loaded();
       setIsLoaded(true);
     } catch (error) {
@@ -164,16 +134,8 @@ export function useAudioEngine() {
         pianoSampler.current.triggerAttack(note, time);
       } else if (inst.id === 'xylophone' && xylophoneSampler.current?.loaded) {
         xylophoneSampler.current.triggerAttack(note, time);
-      } else if (inst.id === 'guitar' && guitarSampler.current?.loaded) {
-        guitarSampler.current.triggerAttack(note, time);
       } else if (inst.id === 'violin' && violinSynth.current) {
         violinSynth.current.triggerAttack(note, time);
-      } else if (inst.id === 'flute' && fluteSynth.current) {
-        fluteSynth.current.triggerAttack(note, time);
-      } else if (inst.id === 'ukulele' && ukuleleSynth.current) {
-        ukuleleSynth.current.triggerAttack(note, time);
-      } else if (inst.id === 'clarinet' && clarinetSynth.current) {
-        clarinetSynth.current.triggerAttack(note, time);
       } else {
         genericSynth.current?.triggerAttack(note, time);
       }
@@ -198,16 +160,8 @@ export function useAudioEngine() {
         pianoSampler.current.triggerRelease(note, time);
       } else if (inst.id === 'xylophone' && xylophoneSampler.current?.loaded) {
         xylophoneSampler.current.triggerRelease(note, time);
-      } else if (inst.id === 'guitar' && guitarSampler.current?.loaded) {
-        guitarSampler.current.triggerRelease(note, time);
       } else if (inst.id === 'violin' && violinSynth.current) {
         violinSynth.current.triggerRelease(note, time);
-      } else if (inst.id === 'flute' && fluteSynth.current) {
-        fluteSynth.current.triggerRelease(note, time);
-      } else if (inst.id === 'ukulele' && ukuleleSynth.current) {
-        ukuleleSynth.current.triggerRelease(note, time);
-      } else if (inst.id === 'clarinet' && clarinetSynth.current) {
-        clarinetSynth.current.triggerRelease(note, time);
       } else {
         genericSynth.current?.triggerRelease(note, time);
       }

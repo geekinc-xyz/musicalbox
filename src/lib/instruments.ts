@@ -1,5 +1,5 @@
 
-import { Piano, Drum, Music, Guitar, Speaker, Wind, Triangle } from 'lucide-react';
+import { Piano, Drum, Music, Speaker } from 'lucide-react';
 
 export type InstrumentType = 'melodic' | 'percussive';
 
@@ -14,12 +14,8 @@ export interface Instrument {
 export const INSTRUMENTS: Instrument[] = [
   { id: 'piano', name: 'Salamander Grand', type: 'melodic', icon: Piano, category: 'Keyboards' },
   { id: 'drums', name: 'Studio Acoustic', type: 'percussive', icon: Drum, category: 'Percussion' },
-  { id: 'ukulele', name: 'Soprano Ukulele', type: 'melodic', icon: Music, category: 'Strings' },
   { id: 'xylophone', name: 'Concert Xylophone', type: 'melodic', icon: Speaker, category: 'Mallets' },
-  { id: 'guitar', name: 'Steel String Guitar', type: 'melodic', icon: Guitar, category: 'Strings' },
   { id: 'violin', name: 'Orchestral Violin', type: 'melodic', icon: Music, category: 'Strings' },
-  { id: 'flute', name: 'Silver Flute', type: 'melodic', icon: Wind, category: 'Woodwind' },
-  { id: 'clarinet', name: 'B♭ Clarinet', type: 'melodic', icon: Wind, category: 'Woodwind' },
 ];
 
 export const PIANO_KEYS = [
