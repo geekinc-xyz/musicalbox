@@ -9,11 +9,18 @@ interface KeyboardProps {
   activeNotes: Set<string>;
   accentColor: string;
   labelMode?: 'solfege' | 'alpha' | 'numeric';
+  colorMode?: 'rainbow' | 'monochrome';
 }
 
-export function Keyboard({ onPlay, onStop, activeNotes, accentColor, labelMode = 'alpha' }: KeyboardProps) {
+export function Keyboard({ 
+  onPlay, 
+  onStop, 
+  activeNotes, 
+  accentColor, 
+  labelMode = 'alpha',
+  colorMode = 'monochrome'
+}: KeyboardProps) {
   const handleMouseEnter = (e: React.MouseEvent, note: string) => {
-    // Check if left mouse button is pressed (1)
     if (e.buttons === 1) {
       onPlay(note);
     }
@@ -26,6 +33,8 @@ export function Keyboard({ onPlay, onStop, activeNotes, accentColor, labelMode =
           const isActive = activeNotes.has(key.note);
           // @ts-ignore
           const currentLabel = key[labelMode] || key.label;
+          
+          const keyBaseColor = colorMode === 'rainbow' ? key.color : accentColor;
           
           return (
             <div
@@ -44,18 +53,18 @@ export function Keyboard({ onPlay, onStop, activeNotes, accentColor, labelMode =
                 isActive && "scale-[0.98] brightness-110"
               )}
               style={isActive ? { 
-                backgroundColor: key.isBlack ? undefined : accentColor,
-                backgroundImage: key.isBlack ? `linear-gradient(to bottom, ${accentColor}, #000)` : 'none',
+                backgroundColor: key.isBlack ? undefined : keyBaseColor,
+                backgroundImage: key.isBlack ? `linear-gradient(to bottom, ${keyBaseColor}, #000)` : 'none',
                 boxShadow: key.isBlack 
-                  ? `0 10px 20px ${accentColor}60, inset 0 0 10px rgba(255,255,255,0.2)` 
-                  : `0 15px 30px ${accentColor}40, inset 0 -5px 15px rgba(0,0,0,0.1)`,
-                borderColor: accentColor
+                  ? `0 10px 20px ${keyBaseColor}60, inset 0 0 10px rgba(255,255,255,0.2)` 
+                  : `0 15px 30px ${keyBaseColor}40, inset 0 -5px 15px rgba(0,0,0,0.1)`,
+                borderColor: keyBaseColor
               } : {}}
             >
               <div className={cn(
                 "w-full h-1 absolute top-0 left-0 transition-opacity",
                 isActive ? "opacity-100" : "opacity-0"
-              )} style={{ backgroundColor: accentColor }} />
+              )} style={{ backgroundColor: keyBaseColor }} />
               
               <span className={cn(
                 "text-[10px] font-bold tracking-tighter transition-colors pointer-events-none text-center px-1",

@@ -44,7 +44,7 @@ export function ControlPanel({
       custom: "Personnalisation Interface",
       select: "Choisir un accent",
       labels: "Étiquettes des notes",
-      colors: "Mode Couleurs (Xylo)",
+      colors: "Mode Couleurs Global",
       modes: {
         solfege: "Do-Ré-Mi",
         alpha: "A-B-C",
@@ -60,7 +60,7 @@ export function ControlPanel({
       custom: "Interface Customization",
       select: "Select Key Accent",
       labels: "Note Labels",
-      colors: "Color Mode (Xylo)",
+      colors: "Global Color Mode",
       modes: {
         solfege: "Do-Re-Mi",
         alpha: "A-B-C",

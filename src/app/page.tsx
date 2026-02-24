@@ -45,7 +45,7 @@ export default function Home() {
   const [telemetry, setTelemetry] = useState({ left: 0, right: 0 });
   const [lang, setLang] = useState<'fr' | 'en'>('fr');
   
-  // Customization state
+  // Personalization state (Global)
   const [xyloLabelMode, setXyloLabelMode] = useState<'solfege' | 'alpha' | 'numeric'>('solfege');
   const [xyloColorMode, setXyloColorMode] = useState<'rainbow' | 'monochrome'>('rainbow');
 
@@ -273,10 +273,13 @@ export default function Home() {
                     activeNotes={activeNotes}
                     accentColor={accentColor}
                     labelMode={xyloLabelMode}
+                    colorMode={xyloColorMode}
                   />
                 ) : (
                   <DrumPads 
                     onPlay={(note) => playNote(note, 'percussive')}
+                    colorMode={xyloColorMode}
+                    accentColor={accentColor}
                   />
                 )}
             </div>
