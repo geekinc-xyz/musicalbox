@@ -84,7 +84,7 @@ export default function CreditsPage() {
 
         <footer className="mt-32 pt-10 border-t border-white/5 text-center">
           <p className="text-[10px] font-black text-muted-foreground/40 uppercase tracking-[0.3em]">
-            © 2026 MusicalBox Studio — Développé avec amour pour les musiciens.
+            © 2026 MusicalBox, un projet GEEK Inc. Tous droits réservés.
           </p>
         </footer>
       </main>
