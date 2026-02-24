@@ -1,4 +1,3 @@
-
 "use client"
 
 import { useState } from 'react';
@@ -28,18 +27,25 @@ export function Xylophone({ onPlay, onStop, activeNotes, lang }: XylophoneProps)
   const handlePress = (note: string) => {
     onPlay(note);
     setPressedNote(note);
+    // Visual feedback duration
     setTimeout(() => {
       setPressedNote(null);
       onStop(note);
     }, 150);
   };
 
+  const handleMouseEnter = (e: React.MouseEvent, note: string) => {
+    if (e.buttons === 1) {
+      handlePress(note);
+    }
+  };
+
   const instruction = lang === 'fr' 
-    ? "TAPPEZ SUR LES LAMES OU UTILISEZ LES TOUCHES (A-K)" 
-    : "TAP THE BARS OR USE KEYS (A-K)";
+    ? "GLISSEZ SUR LES LAMES OU UTILISEZ LES TOUCHES (A-K)" 
+    : "SLIDE ACROSS THE BARS OR USE KEYS (A-K)";
 
   return (
-    <div className="flex flex-col items-center gap-12 py-14 w-full max-w-6xl mx-auto">
+    <div className="flex flex-col items-center gap-12 py-14 w-full max-w-6xl mx-auto select-none">
       <div className="relative flex items-center justify-center p-10 md:p-14 bg-[#5d3a2f] rounded-[3.5rem] shadow-[0_40px_80px_-15px_rgba(0,0,0,0.9)] border-b-[12px] border-[#3a241d] transition-all overflow-hidden ring-1 ring-white/10">
         
         <div className="absolute top-[28%] left-0 right-0 h-4 bg-[#3a241d]/50 shadow-inner" />
@@ -51,9 +57,10 @@ export function Xylophone({ onPlay, onStop, activeNotes, lang }: XylophoneProps)
             return (
               <button
                 key={bar.note}
-                onMouseDown={() => handlePress(bar.note)}
+                onMouseDown={(e) => { e.preventDefault(); handlePress(bar.note); }}
+                onMouseEnter={(e) => handleMouseEnter(e, bar.note)}
                 className={cn(
-                  "relative flex flex-col items-center rounded-2xl transition-all duration-75 group transform origin-bottom",
+                  "relative flex flex-col items-center rounded-2xl transition-all duration-75 group transform origin-bottom outline-none",
                   bar.color,
                   bar.height,
                   "w-12 sm:w-16 md:w-20 lg:w-24",

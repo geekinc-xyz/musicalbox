@@ -11,15 +11,23 @@ interface KeyboardProps {
 }
 
 export function Keyboard({ onPlay, onStop, activeNotes, accentColor }: KeyboardProps) {
+  const handleMouseEnter = (e: React.MouseEvent, note: string) => {
+    // Check if left mouse button is pressed (1)
+    if (e.buttons === 1) {
+      onPlay(note);
+    }
+  };
+
   return (
-    <div className="relative w-full overflow-x-auto keyboard-container py-12 px-4 flex justify-center">
+    <div className="relative w-full overflow-x-auto keyboard-container py-12 px-4 flex justify-center select-none">
       <div className="flex h-[320px] bg-neutral-900 p-3 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] border border-white/5 relative">
         {PIANO_KEYS.map((key) => {
           const isActive = activeNotes.has(key.note);
           return (
             <div
               key={key.note}
-              onMouseDown={() => onPlay(key.note)}
+              onMouseDown={(e) => { e.preventDefault(); onPlay(key.note); }}
+              onMouseEnter={(e) => handleMouseEnter(e, key.note)}
               onMouseUp={() => onStop(key.note)}
               onMouseLeave={() => onStop(key.note)}
               onTouchStart={(e) => { e.preventDefault(); onPlay(key.note); }}
