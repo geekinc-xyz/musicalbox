@@ -13,12 +13,9 @@ export function useAudioEngine() {
   const [activeNotes, setActiveNotes] = useState<Set<string>>(new Set());
   const [analyzer, setAnalyzer] = useState<AnalyserNode | null>(null);
 
-  // Samplers pour les sons réels
   const pianoSampler = useRef<Tone.Sampler | null>(null);
   const xylophoneSampler = useRef<Tone.Sampler | null>(null);
-  const drumSampler = useRef<Tone.Sampler | null>(null);
-  
-  // Synthétiseurs spécifiques
+  const drumPlayers = useRef<Tone.Players | null>(null);
   const violinSynth = useRef<Tone.PolySynth | null>(null);
   const genericSynth = useRef<Tone.PolySynth | null>(null);
   
@@ -34,21 +31,17 @@ export function useAudioEngine() {
     try {
       await Tone.start();
       
-      // Chaîne de sortie principale
       volRef.current = new Tone.Volume(volume).toDestination();
       
-      // Réverbération Studio
       const reverb = new Tone.Reverb({ decay: 2.5, wet: reverbMix });
       await reverb.generate();
       reverbRef.current = reverb.connect(volRef.current);
       
-      // Analyseur Spectral
       const fft = Tone.getContext().createAnalyser();
       fft.fftSize = 256;
       setAnalyzer(fft);
       Tone.getDestination().connect(fft);
 
-      // 1. Piano à queue
       pianoSampler.current = new Tone.Sampler({
         urls: {
           A0: "A0.mp3", C1: "C1.mp3", "D#1": "Ds1.mp3", "F#1": "Fs1.mp3",
@@ -63,7 +56,6 @@ export function useAudioEngine() {
         baseUrl: "https://tonejs.github.io/audio/salamander/",
       }).connect(reverbRef.current);
 
-      // 2. Xylophone Local (depuis public/SonsXylo/)
       xylophoneSampler.current = new Tone.Sampler({
         urls: {
           "C4": "Do(1).mp3",
@@ -78,22 +70,20 @@ export function useAudioEngine() {
         baseUrl: "/SonsXylo/",
       }).connect(reverbRef.current);
 
-      // 3. Drums Acoustiques (Connexion directe pour plus de punch)
-      drumSampler.current = new Tone.Sampler({
+      drumPlayers.current = new Tone.Players({
         urls: {
-          "C1": "kick.mp3",
-          "D1": "snare.mp3",
-          "F#1": "hihat.mp3",
-          "G#1": "openhihat.mp3",
-          "F1": "tom1.mp3",
-          "G1": "tom2.mp3",
-          "A1": "tom3.mp3",
-          "C#2": "crash.mp3",
+          "kick": "kick.mp3",
+          "snare": "snare.mp3",
+          "hihat": "hihat.mp3",
+          "openhihat": "openhihat.mp3",
+          "tom1": "tom1.mp3",
+          "tom2": "tom2.mp3",
+          "tom3": "tom3.mp3",
+          "crash": "crash.mp3",
         },
         baseUrl: "https://tonejs.github.io/audio/drum-samples/acoustic-kit/",
       }).connect(volRef.current);
 
-      // 4. Violon Orchestral (Patch Synthèse spécifique)
       violinSynth.current = new Tone.PolySynth(Tone.Synth, {
         oscillator: { type: "sawtooth" },
         envelope: { attack: 0.4, decay: 0.3, sustain: 0.8, release: 1.5 },
@@ -101,13 +91,11 @@ export function useAudioEngine() {
 
       genericSynth.current = new Tone.PolySynth(Tone.Synth).connect(reverbRef.current);
 
-      // Metronome
       tickSynthRef.current = new Tone.MembraneSynth({
         pitchDecay: 0.05, octaves: 2,
         envelope: { attack: 0.001, decay: 0.2, sustain: 0 }
       }).connect(volRef.current);
 
-      // Attente du chargement complet des buffers
       await Tone.loaded();
       setIsLoaded(true);
     } catch (error) {
@@ -142,8 +130,11 @@ export function useAudioEngine() {
       
       setActiveNotes(prev => new Set(prev).add(note));
     } else if (type === 'percussive') {
-      if (drumSampler.current?.loaded) {
-        drumSampler.current.triggerAttack(note, time);
+      if (drumPlayers.current?.loaded) {
+        const player = drumPlayers.current.player(note);
+        if (player) {
+          player.start(time);
+        }
       }
     }
   }, [isLoaded]);
