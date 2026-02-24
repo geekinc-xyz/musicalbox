@@ -1,9 +1,7 @@
 "use client"
 
-import { Music, ArrowLeft, Github, Globe, Heart } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Music, ArrowLeft, Globe } from 'lucide-react';
 import Link from 'next/link';
-import { cn } from '@/lib/utils';
 import { useState, useEffect } from 'react';
 
 export default function CreditsPage() {
@@ -82,20 +80,6 @@ export default function CreditsPage() {
               </ul>
             </div>
           </div>
-
-          <section className="p-10 rounded-[3rem] bg-gradient-to-br from-primary/20 to-accent/20 border border-white/10 text-center space-y-8">
-            <Heart className="w-12 h-12 text-primary mx-auto animate-pulse" />
-            <h3 className="text-3xl font-black uppercase tracking-tighter italic">Remerciements Spéciaux</h3>
-            <p className="text-muted-foreground leading-relaxed">
-              Merci à tous les contributeurs de l'open-source et aux développeurs passionnés qui partagent leurs connaissances. MusicalBox est un hommage à la créativité numérique.
-            </p>
-            <div className="flex justify-center gap-6">
-              <a href="https://github.com/geekinc-xyz/musicalbox" target="_blank" className="flex items-center gap-2 px-6 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl transition-all font-black text-xs uppercase tracking-widest">
-                <Github className="w-4 h-4" />
-                Dépôt GitHub
-              </a>
-            </div>
-          </section>
         </div>
 
         <footer className="mt-32 pt-10 border-t border-white/5 text-center">
