@@ -132,20 +132,31 @@ export default function Home() {
   const peakHeadroom = (volume + 60) * 1.6;
 
   return (
-    <div className={cn("flex-1 flex flex-col h-screen overflow-hidden transition-colors duration-500 font-body", theme === 'dark' ? 'bg-[#1A161C] text-white' : 'bg-white text-black')}>
-      {theme === 'dark' && (
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute -top-[20%] -left-[10%] w-[60%] h-[60%] bg-primary/10 rounded-full blur-[120px] animate-pulse" />
-          <div className="absolute top-[40%] -right-[10%] w-[50%] h-[50%] bg-accent/10 rounded-full blur-[150px]" />
-          <div className="absolute bottom-0 left-0 right-0 h-64 bg-gradient-to-t from-[#1A161C] to-transparent" />
-        </div>
-      )}
+    <div className={cn("flex-1 flex flex-col h-screen overflow-hidden transition-all duration-700 font-body", 
+      theme === 'dark' ? 'bg-[#1A161C] text-white' : 'bg-neutral-50 text-neutral-900')}>
+      
+      {/* Dynamic Studio Glows */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none transition-opacity duration-1000">
+        {theme === 'dark' ? (
+          <>
+            <div className="absolute -top-[20%] -left-[10%] w-[60%] h-[60%] bg-primary/10 rounded-full blur-[120px] animate-pulse" />
+            <div className="absolute top-[40%] -right-[10%] w-[50%] h-[50%] bg-accent/10 rounded-full blur-[150px]" />
+          </>
+        ) : (
+          <>
+            <div className="absolute -top-[20%] -left-[10%] w-[60%] h-[60%] bg-primary/5 rounded-full blur-[120px]" />
+            <div className="absolute top-[40%] -right-[10%] w-[50%] h-[50%] bg-accent/5 rounded-full blur-[150px]" />
+          </>
+        )}
+      </div>
 
-      <header className="h-20 border-b border-border/40 px-6 flex items-center justify-between bg-background/60 backdrop-blur-xl z-[60]">
+      <header className={cn("h-20 border-b px-6 flex items-center justify-between backdrop-blur-xl z-[60] transition-colors", 
+        theme === 'dark' ? 'bg-[#1A161C]/60 border-white/10' : 'bg-white/70 border-black/5')}>
         <div className="flex items-center gap-5">
           <div className="group relative">
             <div className="absolute -inset-1 bg-gradient-to-r from-primary via-accent to-primary rounded-2xl blur opacity-30 group-hover:opacity-60 transition duration-1000 group-hover:duration-200"></div>
-            <div className="relative w-12 h-12 rounded-2xl bg-neutral-900 border border-white/10 flex items-center justify-center text-primary shadow-2xl">
+            <div className={cn("relative w-12 h-12 rounded-2xl border flex items-center justify-center text-primary shadow-2xl transition-colors",
+              theme === 'dark' ? 'bg-neutral-900 border-white/10' : 'bg-white border-black/5')}>
               <Music className="w-6 h-6" />
             </div>
           </div>
@@ -176,12 +187,13 @@ export default function Home() {
             <Button variant="ghost" size="icon" className="rounded-xl"><Settings className="w-5 h-5" /></Button>
           </div>
           <Button variant="outline" className="hidden md:flex gap-2 rounded-2xl text-[10px] font-black px-6 h-11"><Save className="w-4 h-4" /> {t.save}</Button>
-          <Button className="gap-2 bg-accent hover:bg-accent/90 rounded-2xl text-[10px] font-black px-7 h-11"><Share2 className="w-4 h-4" /> {t.export}</Button>
+          <Button className="gap-2 bg-accent hover:bg-accent/90 rounded-2xl text-[10px] font-black px-7 h-11 text-white shadow-lg shadow-accent/20"><Share2 className="w-4 h-4" /> {t.export}</Button>
         </div>
       </header>
 
       <main className="flex-1 flex overflow-hidden">
-        <aside className="w-[320px] border-r border-border/40 bg-background/40 backdrop-blur-md hidden xl:block z-50">
+        <aside className={cn("w-[320px] border-r hidden xl:block z-50 transition-colors", 
+          theme === 'dark' ? 'bg-[#1A161C]/40 border-white/10' : 'bg-white/40 border-black/5')}>
           <ScrollArea className="h-full px-6 py-10">
             <InstrumentSelector 
               selectedId={selectedInstrument.id} 
@@ -194,14 +206,15 @@ export default function Home() {
 
         <div className="flex-1 relative flex flex-col z-10">
           {!isLoaded ? (
-            <div className="absolute inset-0 flex items-center justify-center bg-background/90 backdrop-blur-3xl z-[100]">
+            <div className={cn("absolute inset-0 flex items-center justify-center z-[100] transition-colors",
+              theme === 'dark' ? 'bg-[#1A161C]/90 backdrop-blur-3xl' : 'bg-white/90 backdrop-blur-3xl')}>
               <div className="text-center space-y-10 max-w-md p-10">
                 <Music className="w-16 h-16 text-primary mx-auto animate-bounce" />
                 <h2 className="text-4xl font-black uppercase tracking-tighter">{t.title} Studio</h2>
                 <Button 
                   size="lg" 
                   disabled={isInitializing}
-                  className="w-full bg-accent hover:bg-accent/90 h-20 rounded-[1.5rem] text-xl font-black uppercase tracking-widest"
+                  className="w-full bg-accent hover:bg-accent/90 h-20 rounded-[1.5rem] text-xl font-black uppercase tracking-widest text-white shadow-2xl shadow-accent/40"
                   onClick={initAudio}
                 >
                   {isInitializing ? t.loading : t.enter}
@@ -231,7 +244,8 @@ export default function Home() {
               lang={lang}
             />
 
-            <div className="relative bg-background/50 border border-border/40 rounded-[4rem] p-6 md:p-14 shadow-3xl overflow-hidden min-h-[480px] flex items-center justify-center backdrop-blur-md">
+            <div className={cn("relative border rounded-[4rem] p-6 md:p-14 shadow-3xl overflow-hidden min-h-[480px] flex items-center justify-center backdrop-blur-md transition-all duration-500",
+              theme === 'dark' ? 'bg-neutral-900/50 border-white/10' : 'bg-white/80 border-black/5')}>
                 {selectedInstrument.id === 'xylophone' ? (
                   <Xylophone 
                     onPlay={(note) => playNote(note, 'melodic')}
@@ -254,7 +268,8 @@ export default function Home() {
             </div>
             
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 pb-10">
-              <div className="bg-muted/10 border border-border/40 rounded-[2.5rem] p-10 space-y-8 backdrop-blur-sm">
+              <div className={cn("border rounded-[2.5rem] p-10 space-y-8 backdrop-blur-sm transition-colors",
+                theme === 'dark' ? 'bg-neutral-800/20 border-white/10' : 'bg-white border-black/5 shadow-xl shadow-black/5')}>
                 <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/60">{t.telemetry}</h4>
                 <div className="space-y-6">
                   {[
@@ -267,7 +282,7 @@ export default function Home() {
                         <span>{meter.label}</span>
                         <span>{Math.round(meter.val)}%</span>
                       </div>
-                      <div className="h-1.5 bg-border/20 rounded-full overflow-hidden">
+                      <div className={cn("h-1.5 rounded-full overflow-hidden", theme === 'dark' ? 'bg-white/5' : 'bg-black/5')}>
                         <div className={cn("h-full transition-all rounded-full", meter.color)} style={{ width: `${meter.val}%` }} />
                       </div>
                     </div>
@@ -279,7 +294,8 @@ export default function Home() {
 
             <footer className="border-t border-border/20 pt-10 pb-20 flex flex-col md:flex-row items-center justify-between gap-6">
               <div className="flex items-center gap-4">
-                <div className="w-10 h-10 rounded-xl bg-neutral-900 border border-white/5 flex items-center justify-center text-primary/50">
+                <div className={cn("w-10 h-10 rounded-xl border flex items-center justify-center text-primary/50 transition-colors",
+                  theme === 'dark' ? 'bg-neutral-900 border-white/5' : 'bg-white border-black/5')}>
                   <Music className="w-5 h-5" />
                 </div>
                 <p className="text-[11px] font-bold text-muted-foreground/60 uppercase tracking-widest">{t.copyright}</p>
@@ -290,10 +306,11 @@ export default function Home() {
                   href="https://github.com/geekinc-xyz/musicalbox" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all group"
+                  className={cn("flex items-center gap-2 px-4 py-2 rounded-xl border transition-all group",
+                    theme === 'dark' ? 'bg-white/5 border-white/10 hover:bg-white/10' : 'bg-white border-black/10 hover:bg-black/5')}
                 >
-                  <Github className="w-4 h-4 text-muted-foreground group-hover:text-white" />
-                  <span className="text-[10px] font-black text-muted-foreground group-hover:text-white uppercase tracking-widest">
+                  <Github className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                  <span className="text-[10px] font-black text-muted-foreground group-hover:text-primary uppercase tracking-widest transition-colors">
                     Open-Source Project
                   </span>
                 </a>
