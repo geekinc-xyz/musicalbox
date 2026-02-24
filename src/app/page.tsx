@@ -71,7 +71,7 @@ export default function Home() {
       right: "DROITE",
       headroom: "RÉSERVE",
       copyright: "© 2026 MusicalBox, un projet GEEK Inc. Tous droits réservés.",
-      rack: "RACK D'INSTRUMENTS",
+      rack: "RACK d'INSTRUMENTS",
       credits: "Crédits",
       support: "musicalbox@geek-inc.xyz",
       category_names: {
@@ -183,7 +183,10 @@ export default function Home() {
             </div>
           </div>
           <div className="flex flex-col">
-            <h1 className="text-lg font-black tracking-[0.2em] uppercase leading-none font-headline">{t.title}</h1>
+            <div className="flex items-center gap-3">
+              <h1 className="text-lg font-black tracking-[0.2em] uppercase leading-none font-headline">{t.title}</h1>
+              <span className="px-2 py-0.5 rounded-md bg-accent/10 text-accent text-[8px] font-black tracking-tighter border border-accent/20">BETA</span>
+            </div>
             <div className="flex items-center gap-2 mt-1">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_#10b981]" />
               <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/80">{t.subtitle}</span>
