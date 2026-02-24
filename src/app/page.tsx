@@ -64,7 +64,7 @@ export default function Home() {
       copyright: "© 2026 MusicalBox, un projet GEEK Inc. Tous droits réservés.",
       rack: "RACK D'INSTRUMENTS",
       credits: "Crédits",
-      support: "Support",
+      support: "musicalbox@geek-inc.xyz",
       category_names: {
         Keyboards: "Claviers",
         Percussion: "Percussions",
@@ -91,7 +91,7 @@ export default function Home() {
       copyright: "© 2026 MusicalBox, a GEEK Inc project. All rights reserved.",
       rack: "INSTRUMENT RACK",
       credits: "Credits",
-      support: "Support",
+      support: "musicalbox@geek-inc.xyz",
       category_names: {
         Keyboards: "Keyboards",
         Percussion: "Percussion",
@@ -201,7 +201,7 @@ export default function Home() {
         </div>
       </header>
 
-      <main className="flex-1 flex overflow-hidden">
+      <main className="max-w-none flex-1 flex overflow-hidden">
         <aside className={cn("w-[320px] border-r hidden xl:block z-50 transition-colors", 
           theme === 'dark' ? 'bg-[#1A161C]/40 border-white/10' : 'bg-white/40 border-black/5')}>
           <ScrollArea className="h-full px-6 py-10">
@@ -339,7 +339,7 @@ export default function Home() {
 
                 <div className="flex gap-8 text-[10px] font-black text-muted-foreground/40 uppercase tracking-widest">
                   <Link href="/credits" className="hover:text-primary transition-colors">{t.credits}</Link>
-                  <a href="mailto:contact@geekinc.xyz" className="hover:text-primary transition-colors">{t.support}</a>
+                  <a href={`mailto:${t.support}`} className="hover:text-primary transition-colors">{t.support}</a>
                 </div>
               </div>
             </footer>
