@@ -1,4 +1,3 @@
-
 import { Piano, Drum, Music, Speaker } from 'lucide-react';
 
 export type InstrumentType = 'melodic' | 'percussive';
@@ -12,10 +11,10 @@ export interface Instrument {
 }
 
 export const INSTRUMENTS: Instrument[] = [
-  { id: 'piano', name: 'Salamander Grand', type: 'melodic', icon: Piano, category: 'Keyboards' },
-  { id: 'drums', name: 'Studio Acoustic', type: 'percussive', icon: Drum, category: 'Percussion' },
-  { id: 'xylophone', name: 'Concert Xylophone', type: 'melodic', icon: Speaker, category: 'Mallets' },
-  { id: 'violin', name: 'Orchestral Violin', type: 'melodic', icon: Music, category: 'Strings' },
+  { id: 'piano', name: 'Piano', type: 'melodic', icon: Piano, category: 'Keyboards' },
+  { id: 'drums', name: 'Drums', type: 'percussive', icon: Drum, category: 'Percussion' },
+  { id: 'xylophone', name: 'Xylophone', type: 'melodic', icon: Speaker, category: 'Mallets' },
+  { id: 'violin', name: 'Violin', type: 'melodic', icon: Music, category: 'Strings' },
 ];
 
 export const PIANO_KEYS = [

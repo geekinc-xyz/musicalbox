@@ -1,4 +1,3 @@
-
 "use client"
 
 import { INSTRUMENTS, Instrument } from "@/lib/instruments"
@@ -9,9 +8,10 @@ interface InstrumentSelectorProps {
   selectedId: string;
   onSelect: (instrument: Instrument) => void;
   label: string;
+  instrumentNames: Record<string, string>;
 }
 
-export function InstrumentSelector({ selectedId, onSelect, label }: InstrumentSelectorProps) {
+export function InstrumentSelector({ selectedId, onSelect, label, instrumentNames }: InstrumentSelectorProps) {
   // Group by category
   const categories = Array.from(new Set(INSTRUMENTS.map(i => i.category)));
 
@@ -35,6 +35,8 @@ export function InstrumentSelector({ selectedId, onSelect, label }: InstrumentSe
               {INSTRUMENTS.filter(i => i.category === category).map((inst) => {
                 const Icon = inst.icon;
                 const isActive = selectedId === inst.id;
+                const localizedName = instrumentNames[inst.id] || inst.name;
+                
                 return (
                   <button
                     key={inst.id}
@@ -54,7 +56,7 @@ export function InstrumentSelector({ selectedId, onSelect, label }: InstrumentSe
                     </div>
                     
                     <div className="flex flex-col items-start flex-1 min-w-0">
-                      <span className="text-sm font-bold truncate w-full">{inst.name}</span>
+                      <span className="text-sm font-bold truncate w-full">{localizedName}</span>
                     </div>
 
                     {isActive && (

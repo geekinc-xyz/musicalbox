@@ -1,4 +1,3 @@
-
 "use client"
 
 import { useState, useEffect } from 'react';
@@ -62,7 +61,13 @@ export default function Home() {
       right: "DROITE",
       headroom: "RÉSERVE",
       copyright: "© 2024 MusicalBox Studio. Tous droits réservés.",
-      rack: "RACK D'INSTRUMENTS"
+      rack: "RACK D'INSTRUMENTS",
+      instrument_names: {
+        piano: "Piano",
+        drums: "Batterie",
+        xylophone: "Xylophone",
+        violin: "Violon"
+      }
     },
     en: {
       title: "MusicalBox",
@@ -77,7 +82,13 @@ export default function Home() {
       right: "RIGHT",
       headroom: "HEADROOM",
       copyright: "© 2024 MusicalBox Studio. All rights reserved.",
-      rack: "INSTRUMENT RACK"
+      rack: "INSTRUMENT RACK",
+      instrument_names: {
+        piano: "Piano",
+        drums: "Drums",
+        xylophone: "Xylophone",
+        violin: "Violin"
+      }
     }
   }[lang];
 
@@ -175,6 +186,7 @@ export default function Home() {
               selectedId={selectedInstrument.id} 
               onSelect={setSelectedInstrument} 
               label={t.rack}
+              instrumentNames={t.instrument_names}
             />
           </ScrollArea>
         </aside>
@@ -201,7 +213,9 @@ export default function Home() {
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
               <div className="flex flex-col">
                 <span className="text-[11px] font-black uppercase tracking-[0.4em] text-accent/80 mb-2">{t.now_playing}</span>
-                <h2 className="text-6xl lg:text-8xl font-black tracking-tighter italic font-headline">{selectedInstrument.name}</h2>
+                <h2 className="text-6xl lg:text-8xl font-black tracking-tighter italic font-headline">
+                  {t.instrument_names[selectedInstrument.id as keyof typeof t.instrument_names]}
+                </h2>
               </div>
               <Metronome onTick={playTick} lang={lang} />
             </div>
