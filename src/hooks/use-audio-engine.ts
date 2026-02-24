@@ -52,7 +52,7 @@ export function useAudioEngine() {
       setAnalyzer(fft);
       Tone.getDestination().connect(fft);
 
-      // 1. Piano à queue (Salamander)
+      // 1. Piano à queue
       pianoSampler.current = new Tone.Sampler({
         urls: {
           A0: "A0.mp3", C1: "C1.mp3", "D#1": "Ds1.mp3", "F#1": "Fs1.mp3",
@@ -67,8 +67,7 @@ export function useAudioEngine() {
         baseUrl: "https://tonejs.github.io/audio/salamander/",
       }).connect(reverbRef.current);
 
-      // 2. Xylophone avec VOS fichiers locaux
-      // IMPORTANT: Le dossier SonsXylo doit être dans /public/SonsXylo/
+      // 2. Xylophone Local (Mapping correct Do(1), Ré(2), etc.)
       xylophoneSampler.current = new Tone.Sampler({
         urls: {
           "C4": "Do(1).mp3",
@@ -83,13 +82,13 @@ export function useAudioEngine() {
         baseUrl: "/SonsXylo/",
       }).connect(reverbRef.current);
 
-      // 3. Guitare Acoustique (Berklee)
+      // 3. Guitare Acoustique
       guitarSampler.current = new Tone.Sampler({
         urls: { "A2": "guitar_acoustic.mp3" },
         baseUrl: "https://tonejs.github.io/audio/berklee/",
       }).connect(reverbRef.current);
 
-      // 4. Drums Acoustiques (Connectés directement pour plus d'impact)
+      // 4. Drums Acoustiques
       drumSampler.current = new Tone.Sampler({
         urls: {
           "C1": "kick.mp3",
@@ -104,29 +103,30 @@ export function useAudioEngine() {
         baseUrl: "https://tonejs.github.io/audio/drum-samples/acoustic-kit/",
       }).connect(volRef.current);
 
-      // 5. Violon Orchestral (Synthèse Sawtooth douce)
+      // 5. Violon Orchestral (Sawtooth douce + Attack lent)
       violinSynth.current = new Tone.PolySynth(Tone.Synth, {
         oscillator: { type: "sawtooth" },
-        envelope: { attack: 0.3, decay: 0.4, sustain: 0.7, release: 1.2 },
+        envelope: { attack: 0.4, decay: 0.3, sustain: 0.8, release: 1.5 },
       }).connect(reverbRef.current);
 
-      // 6. Flûte de Pan (Synthèse FM venteuse)
+      // 6. Flûte de Pan (FM venteuse + Harmoniques)
       fluteSynth.current = new Tone.PolySynth(Tone.FMSynth, {
-        modulationIndex: 10,
         harmonicity: 1.5,
-        envelope: { attack: 0.1, decay: 0.2, sustain: 0.4, release: 0.8 }
+        modulationIndex: 12,
+        oscillator: { type: "sine" },
+        envelope: { attack: 0.1, decay: 0.2, sustain: 0.5, release: 0.8 }
       }).connect(reverbRef.current);
 
-      // 7. Ukulélé (Synthèse Triangle "pluck")
+      // 7. Ukulélé (Pincement sec + Triangle)
       ukuleleSynth.current = new Tone.PolySynth(Tone.Synth, {
         oscillator: { type: "triangle" },
-        envelope: { attack: 0.005, decay: 0.1, sustain: 0.2, release: 0.5 }
+        envelope: { attack: 0.005, decay: 0.1, sustain: 0.2, release: 0.6 }
       }).connect(reverbRef.current);
 
-      // 8. Clarinette (Synthèse Square creuse)
+      // 8. Clarinette (Square wave creuse)
       clarinetSynth.current = new Tone.PolySynth(Tone.Synth, {
         oscillator: { type: "square" },
-        envelope: { attack: 0.1, decay: 0.1, sustain: 0.6, release: 0.4 }
+        envelope: { attack: 0.1, decay: 0.1, sustain: 0.7, release: 0.5 }
       }).connect(reverbRef.current);
 
       genericSynth.current = new Tone.PolySynth(Tone.Synth).connect(reverbRef.current);
@@ -137,7 +137,7 @@ export function useAudioEngine() {
         envelope: { attack: 0.001, decay: 0.2, sustain: 0 }
       }).connect(volRef.current);
 
-      // Attendre que tout soit chargé
+      // On attend que les buffers critiques soient chargés
       await Tone.loaded();
       setIsLoaded(true);
     } catch (error) {
