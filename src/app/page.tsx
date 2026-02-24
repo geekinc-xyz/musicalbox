@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import Link from 'next/link';
 
 export default function Home() {
   const { 
@@ -62,6 +63,8 @@ export default function Home() {
       headroom: "RÉSERVE",
       copyright: "© 2026 MusicalBox, un projet GEEK Inc. Tous droits réservés.",
       rack: "RACK D'INSTRUMENTS",
+      credits: "Crédits",
+      support: "Support",
       category_names: {
         Keyboards: "Claviers",
         Percussion: "Percussions",
@@ -87,6 +90,8 @@ export default function Home() {
       headroom: "HEADROOM",
       copyright: "© 2026 MusicalBox, a GEEK Inc project. All rights reserved.",
       rack: "INSTRUMENT RACK",
+      credits: "Credits",
+      support: "Support",
       category_names: {
         Keyboards: "Keyboards",
         Percussion: "Percussion",
@@ -333,9 +338,8 @@ export default function Home() {
                 </a>
 
                 <div className="flex gap-8 text-[10px] font-black text-muted-foreground/40 uppercase tracking-widest">
-                  <a href="#" className="hover:text-primary transition-colors">Privacy</a>
-                  <a href="#" className="hover:text-primary transition-colors">Terms</a>
-                  <a href="#" className="hover:text-primary transition-colors">Support</a>
+                  <Link href="/credits" className="hover:text-primary transition-colors">{t.credits}</Link>
+                  <a href="mailto:contact@geekinc.xyz" className="hover:text-primary transition-colors">{t.support}</a>
                 </div>
               </div>
             </footer>
