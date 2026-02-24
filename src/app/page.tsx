@@ -14,9 +14,6 @@ import { INSTRUMENTS, Instrument } from '@/lib/instruments';
 import { Button } from '@/components/ui/button';
 import { 
   Music, 
-  Save, 
-  Share2, 
-  Settings,
   Sun, 
   Moon,
   Globe,
@@ -180,14 +177,11 @@ export default function Home() {
             {lang === 'fr' ? 'English' : 'Français'}
           </Button>
           
-          <div className="hidden lg:flex items-center gap-1">
+          <div className="flex items-center gap-1">
             <Button variant="ghost" size="icon" onClick={toggleTheme} className="rounded-xl">
               {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
             </Button>
-            <Button variant="ghost" size="icon" className="rounded-xl"><Settings className="w-5 h-5" /></Button>
           </div>
-          <Button variant="outline" className="hidden md:flex gap-2 rounded-2xl text-[10px] font-black px-6 h-11"><Save className="w-4 h-4" /> {t.save}</Button>
-          <Button className="gap-2 bg-accent hover:bg-accent/90 rounded-2xl text-[10px] font-black px-7 h-11 text-white shadow-lg shadow-accent/20"><Share2 className="w-4 h-4" /> {t.export}</Button>
         </div>
       </header>
 
