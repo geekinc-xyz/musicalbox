@@ -22,9 +22,6 @@ export function InstrumentSelector({ selectedId, onSelect, label, instrumentName
           <Layers className="w-4 h-4 text-primary" />
           <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-muted-foreground">{label}</h3>
         </div>
-        <div className="px-2 py-0.5 rounded-full bg-primary/10 text-[9px] font-bold text-primary border border-primary/20">
-          PRO
-        </div>
       </div>
 
       <div className="space-y-6">
