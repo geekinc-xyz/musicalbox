@@ -17,6 +17,7 @@ export function useAudioEngine() {
   const xylophoneSampler = useRef<Tone.Sampler | null>(null);
   const drumPlayers = useRef<Tone.Players | null>(null);
   const violinSynth = useRef<Tone.PolySynth | null>(null);
+  const malletSynth = useRef<Tone.PolySynth | null>(null);
   const genericSynth = useRef<Tone.PolySynth | null>(null);
   
   const reverbRef = useRef<Tone.Reverb | null>(null);
@@ -42,6 +43,12 @@ export function useAudioEngine() {
       setAnalyzer(fft);
       Tone.getDestination().connect(fft);
 
+      // Synthèse Mallet (Fallback pour le Xylo)
+      malletSynth.current = new Tone.PolySynth(Tone.Synth, {
+        oscillator: { type: "triangle" },
+        envelope: { attack: 0.005, decay: 0.1, sustain: 0.1, release: 1 },
+      }).connect(reverbRef.current);
+
       // Piano Sampler
       pianoSampler.current = new Tone.Sampler({
         urls: {
@@ -57,18 +64,17 @@ export function useAudioEngine() {
         baseUrl: "https://tonejs.github.io/audio/salamander/",
       }).connect(reverbRef.current);
 
-      // Xylophone Sampler (Pre-configured for local samples extracted from .sf2)
+      // Xylophone Sampler (Recherche les sons extraits du .sf2 dans /public/audio/instruments/xylophone/)
       xylophoneSampler.current = new Tone.Sampler({
         urls: {
           C4: "C4.mp3", D4: "D4.mp3", E4: "E4.mp3", F4: "F4.mp3",
           G4: "G4.mp3", A4: "A4.mp3", B4: "B4.mp3", C5: "C5.mp3"
         },
         baseUrl: "/audio/instruments/xylophone/",
-        onload: () => console.log("Xylophone samples loaded"),
-        onerror: () => {
-          console.warn("Could not load local xylophone samples. Falling back to synthesis.");
-          // Fallback simple synthesis if samples aren't found
-          xylophoneSampler.current = null;
+        onload: () => console.log("Xylophone custom samples loaded"),
+        onerror: (err) => {
+          // Si les fichiers manquent, on ne bloque pas l'app
+          console.warn("Xylophone custom samples not found at /audio/instruments/xylophone/. Using synthesis fallback.");
         }
       }).connect(reverbRef.current);
 
@@ -95,6 +101,7 @@ export function useAudioEngine() {
         envelope: { attack: 0.001, decay: 0.2, sustain: 0 }
       }).connect(volRef.current);
 
+      // On attend uniquement les banques distantes essentielles, le reste est optionnel
       await Tone.loaded();
       setIsLoaded(true);
     } catch (error) {
@@ -122,10 +129,8 @@ export function useAudioEngine() {
       } else if (inst.id === 'xylophone') {
         if (xylophoneSampler.current?.loaded) {
           xylophoneSampler.current.triggerAttack(note, time);
-        } else {
-          // Internal fallback synthesis
-          if (!violinSynth.current) return;
-          violinSynth.current.triggerAttack(note, time);
+        } else if (malletSynth.current) {
+          malletSynth.current.triggerAttack(note, time);
         }
       } else if (inst.id === 'violin' && violinSynth.current) {
         violinSynth.current.triggerAttack(note, time);
@@ -140,7 +145,7 @@ export function useAudioEngine() {
           const player = drumPlayers.current.player(note);
           if (player) player.start(time);
         } catch (e) {
-          console.warn(`Could not play drum sample: ${note}`, e);
+          console.warn(`Could not play drum sample: ${note}`);
         }
       }
     }
@@ -159,8 +164,8 @@ export function useAudioEngine() {
       } else if (inst.id === 'xylophone') {
         if (xylophoneSampler.current?.loaded) {
           xylophoneSampler.current.triggerRelease(note, time);
-        } else {
-          violinSynth.current?.triggerRelease(note, time);
+        } else if (malletSynth.current) {
+          malletSynth.current.triggerRelease(note, time);
         }
       } else if (inst.id === 'violin' && violinSynth.current) {
         violinSynth.current.triggerRelease(note, time);
