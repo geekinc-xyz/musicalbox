@@ -114,7 +114,7 @@ Here are the resources that made this virtual studio possible:
 - **Tone.js** — Web Audio framework for sequencing and synthesis  
 - **Salamander Grand Piano** — High-quality piano samples by Alexander Holm  
 - **Acoustic Drum Kit** — Official Tone.js sample library  
-- **PlayXylo.com** — High-fidelity xylophone samples  
+- **Bellatrix Orchestra** — High-fidelity xylophone samples [(Source)](https://musical-artifacts.com/artifacts/3389)   
 
 ## 🎨 UI & Framework
 - **Next.js 15** — React framework for performance and routing  
