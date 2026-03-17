@@ -36,7 +36,7 @@ export default function CreditsPage() {
         tone: "Le framework Web Audio pour le séquençage et la synthèse.",
         piano: "Échantillons de piano haute qualité par Alexander Holm.",
         drums: "Banque de sons officiels de Tone.js.",
-        xylo: "Synthèse de percussions mélodiques par algorithmes Tone.js.",
+        xylo: "Échantillons personnalisés extraits de banques SoundFont (.sf2).",
         next: "Framework React pour la performance et le routing.",
         tailwind: "Pour un design adaptatif et moderne.",
         shadcn: "Composants d'interface élégants et accessibles.",
@@ -54,7 +54,7 @@ export default function CreditsPage() {
         tone: "The Web Audio framework for sequencing and synthesis.",
         piano: "High-quality piano samples by Alexander Holm.",
         drums: "Official Tone.js sound bank.",
-        xylo: "Melodic percussion synthesis via Tone.js algorithms.",
+        xylo: "Custom samples extracted from SoundFont (.sf2) banks.",
         next: "React framework for performance and routing.",
         tailwind: "For adaptive and modern design.",
         shadcn: "Elegant and accessible interface components.",
@@ -119,9 +119,9 @@ export default function CreditsPage() {
               </div>
               <ul className="space-y-4 text-sm text-muted-foreground">
                 <li><strong className="text-white">Tone.js</strong> — {t.resources.tone}</li>
-                <li><strong className="text-white">Salamander Grand Piano</strong> — {t.resources.piano}</li>
-                <li><strong className="text-white">Acoustic Drum Kit</strong> — {t.resources.drums}</li>
-                <li><strong className="text-white">Custom Mallet Synth</strong> — {t.resources.xylo}</li>
+                <li><strong className="text-white">Grand Piano</strong> — {t.resources.piano}</li>
+                <li><strong className="text-white">Acoustic Kit</strong> — {t.resources.drums}</li>
+                <li><strong className="text-white">Custom SoundFonts</strong> — {t.resources.xylo}</li>
               </ul>
             </div>
 
