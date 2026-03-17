@@ -14,7 +14,7 @@ export function useAudioEngine() {
   const [analyzer, setAnalyzer] = useState<AnalyserNode | null>(null);
 
   const pianoSampler = useRef<Tone.Sampler | null>(null);
-  const xylophoneSampler = useRef<Tone.Sampler | null>(null);
+  const xylophoneSampler = useRef<Tone.PolySynth | null>(null);
   const drumPlayers = useRef<Tone.Players | null>(null);
   const violinSynth = useRef<Tone.PolySynth | null>(null);
   const genericSynth = useRef<Tone.PolySynth | null>(null);
@@ -42,7 +42,7 @@ export function useAudioEngine() {
       setAnalyzer(fft);
       Tone.getDestination().connect(fft);
 
-      // 1. Piano Grand (Salamander)
+      // 1. Piano Grand (Salamander - CC BY)
       pianoSampler.current = new Tone.Sampler({
         urls: {
           A0: "A0.mp3", C1: "C1.mp3", "D#1": "Ds1.mp3", "F#1": "Fs1.mp3",
@@ -57,22 +57,19 @@ export function useAudioEngine() {
         baseUrl: "https://tonejs.github.io/audio/salamander/",
       }).connect(reverbRef.current);
 
-      // 2. Concert Xylophone (Fichiers Locaux renommés)
-      xylophoneSampler.current = new Tone.Sampler({
-        urls: {
-          "C4": "Do(1).mp3",
-          "D4": "Ré(2).mp3",
-          "E4": "Mi(3).mp3",
-          "F4": "Fa(4).mp3",
-          "G4": "Sol(5).mp3",
-          "A4": "La(6).mp3",
-          "B4": "Si(7).mp3",
-          "C5": "Do(8).mp3",
+      // 2. Concert Xylophone (Digital Synthesis - Rights Free)
+      xylophoneSampler.current = new Tone.PolySynth(Tone.Synth, {
+        oscillator: { type: "triangle" },
+        envelope: {
+          attack: 0.005,
+          decay: 0.15,
+          sustain: 0,
+          release: 0.1
         },
-        baseUrl: "/SonsXylo/",
+        volume: -5
       }).connect(reverbRef.current);
 
-      // 3. Drums (Échantillons Internet Tone.js)
+      // 3. Drums (Tone.js Official Samples)
       drumPlayers.current = new Tone.Players({
         urls: {
           "kick": "kick.mp3",
@@ -126,7 +123,7 @@ export function useAudioEngine() {
 
       if (inst.id === 'piano' && pianoSampler.current?.loaded) {
         pianoSampler.current.triggerAttack(note, time);
-      } else if (inst.id === 'xylophone' && xylophoneSampler.current?.loaded) {
+      } else if (inst.id === 'xylophone' && xylophoneSampler.current) {
         xylophoneSampler.current.triggerAttack(note, time);
       } else if (inst.id === 'violin' && violinSynth.current) {
         violinSynth.current.triggerAttack(note, time);
@@ -136,7 +133,6 @@ export function useAudioEngine() {
       
       setActiveNotes(prev => new Set(prev).add(note));
     } else if (type === 'percussive') {
-      // Les batteries utilisent Tone.Players. On vérifie si l'échantillonneur existe et est chargé.
       if (drumPlayers.current) {
         try {
           const player = drumPlayers.current.player(note);
@@ -160,7 +156,7 @@ export function useAudioEngine() {
 
       if (inst.id === 'piano' && pianoSampler.current?.loaded) {
         pianoSampler.current.triggerRelease(note, time);
-      } else if (inst.id === 'xylophone' && xylophoneSampler.current?.loaded) {
+      } else if (inst.id === 'xylophone' && xylophoneSampler.current) {
         xylophoneSampler.current.triggerRelease(note, time);
       } else if (inst.id === 'violin' && violinSynth.current) {
         violinSynth.current.triggerRelease(note, time);

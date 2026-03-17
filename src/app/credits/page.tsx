@@ -1,3 +1,4 @@
+
 "use client"
 
 import { Music, ArrowLeft, Globe } from 'lucide-react';
@@ -35,7 +36,7 @@ export default function CreditsPage() {
         tone: "Le framework Web Audio pour le séquençage et la synthèse.",
         piano: "Échantillons de piano haute qualité par Alexander Holm.",
         drums: "Banque de sons officiels de Tone.js.",
-        xylo: "Échantillons sonores de xylophone haute fidélité.",
+        xylo: "Moteur de synthèse numérique (Wooden Mallet Simulation).",
         next: "Framework React pour la performance et le routing.",
         tailwind: "Pour un design adaptatif et moderne.",
         shadcn: "Composants d'interface élégants et accessibles.",
@@ -53,7 +54,7 @@ export default function CreditsPage() {
         tone: "The Web Audio framework for sequencing and synthesis.",
         piano: "High-quality piano samples by Alexander Holm.",
         drums: "Official Tone.js sound bank.",
-        xylo: "High-fidelity xylophone sound samples.",
+        xylo: "Digital synthesis engine (Wooden Mallet Simulation).",
         next: "React framework for performance and routing.",
         tailwind: "For adaptive and modern design.",
         shadcn: "Elegant and accessible interface components.",
@@ -64,7 +65,6 @@ export default function CreditsPage() {
 
   return (
     <div className="min-h-screen bg-[#1A161C] text-white font-body selection:bg-primary/30">
-      {/* Background Orbs */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] bg-primary/10 rounded-full blur-[120px] animate-pulse" />
         <div className="absolute top-[40%] -right-[10%] w-[40%] h-[40%] bg-accent/10 rounded-full blur-[150px]" />
@@ -121,7 +121,7 @@ export default function CreditsPage() {
                 <li><strong className="text-white">Tone.js</strong> — {t.resources.tone}</li>
                 <li><strong className="text-white">Salamander Grand Piano</strong> — {t.resources.piano}</li>
                 <li><strong className="text-white">Acoustic Drum Kit</strong> — {t.resources.drums}</li>
-                <li><strong className="text-white">PlayXylo.com</strong> — {t.resources.xylo}</li>
+                <li><strong className="text-white">Xylophone Synth</strong> — {t.resources.xylo}</li>
               </ul>
             </div>
 
