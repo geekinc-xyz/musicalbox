@@ -126,6 +126,6 @@ Here are the resources that made this virtual studio possible:
 
 # 📄 License
 
-MIT License  
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
 
 © 2026 MusicalBox — A GEEK Inc. Project
