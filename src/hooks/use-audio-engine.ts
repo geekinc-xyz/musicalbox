@@ -14,7 +14,7 @@ export function useAudioEngine() {
   const [analyzer, setAnalyzer] = useState<AnalyserNode | null>(null);
 
   const pianoSampler = useRef<Tone.Sampler | null>(null);
-  const xylophoneSampler = useRef<Tone.PolySynth | null>(null);
+  const xylophoneSynth = useRef<Tone.PolySynth | null>(null);
   const drumPlayers = useRef<Tone.Players | null>(null);
   const violinSynth = useRef<Tone.PolySynth | null>(null);
   const genericSynth = useRef<Tone.PolySynth | null>(null);
@@ -42,7 +42,7 @@ export function useAudioEngine() {
       setAnalyzer(fft);
       Tone.getDestination().connect(fft);
 
-      // 1. Piano Grand (Salamander - CC BY)
+      // Piano Sampler
       pianoSampler.current = new Tone.Sampler({
         urls: {
           A0: "A0.mp3", C1: "C1.mp3", "D#1": "Ds1.mp3", "F#1": "Fs1.mp3",
@@ -57,43 +57,31 @@ export function useAudioEngine() {
         baseUrl: "https://tonejs.github.io/audio/salamander/",
       }).connect(reverbRef.current);
 
-      // 2. Concert Xylophone (Digital Synthesis - Rights Free)
-      xylophoneSampler.current = new Tone.PolySynth(Tone.Synth, {
+      // Xylophone Default Synthesis (High quality Mallet synth)
+      xylophoneSynth.current = new Tone.PolySynth(Tone.Synth, {
         oscillator: { type: "triangle" },
-        envelope: {
-          attack: 0.005,
-          decay: 0.15,
-          sustain: 0,
-          release: 0.1
-        },
+        envelope: { attack: 0.005, decay: 0.15, sustain: 0, release: 0.1 },
         volume: -5
       }).connect(reverbRef.current);
 
-      // 3. Drums (Tone.js Official Samples)
+      // Drums
       drumPlayers.current = new Tone.Players({
         urls: {
-          "kick": "kick.mp3",
-          "snare": "snare.mp3",
-          "hihat": "hihat.mp3",
-          "openhihat": "openhihat.mp3",
-          "tom1": "tom1.mp3",
-          "tom2": "tom2.mp3",
-          "tom3": "tom3.mp3",
-          "crash": "crash.mp3",
+          "kick": "kick.mp3", "snare": "snare.mp3", "hihat": "hihat.mp3",
+          "openhihat": "openhihat.mp3", "tom1": "tom1.mp3", "tom2": "tom2.mp3",
+          "tom3": "tom3.mp3", "crash": "crash.mp3",
         },
         baseUrl: "https://tonejs.github.io/audio/drum-samples/acoustic-kit/",
       }).connect(volRef.current);
 
-      // 4. Violin (Synthesis)
+      // Violin
       violinSynth.current = new Tone.PolySynth(Tone.Synth, {
         oscillator: { type: "sawtooth" },
         envelope: { attack: 0.4, decay: 0.3, sustain: 0.8, release: 1.5 },
       }).connect(reverbRef.current);
 
-      // 5. Generic Synth fallback
       genericSynth.current = new Tone.PolySynth(Tone.Synth).connect(reverbRef.current);
 
-      // Metronome synth
       tickSynthRef.current = new Tone.MembraneSynth({
         pitchDecay: 0.05, octaves: 2,
         envelope: { attack: 0.001, decay: 0.2, sustain: 0 }
@@ -116,15 +104,15 @@ export function useAudioEngine() {
   const playNote = useCallback((note: string, type: 'melodic' | 'percussive' = 'melodic') => {
     if (!isLoaded) return;
     const time = Tone.now();
-    
+    const inst = currentInstrument.current;
+
     if (type === 'melodic') {
-      const inst = currentInstrument.current;
       if (!inst) return;
 
       if (inst.id === 'piano' && pianoSampler.current?.loaded) {
         pianoSampler.current.triggerAttack(note, time);
-      } else if (inst.id === 'xylophone' && xylophoneSampler.current) {
-        xylophoneSampler.current.triggerAttack(note, time);
+      } else if (inst.id === 'xylophone' && xylophoneSynth.current) {
+        xylophoneSynth.current.triggerAttack(note, time);
       } else if (inst.id === 'violin' && violinSynth.current) {
         violinSynth.current.triggerAttack(note, time);
       } else {
@@ -136,9 +124,7 @@ export function useAudioEngine() {
       if (drumPlayers.current) {
         try {
           const player = drumPlayers.current.player(note);
-          if (player) {
-            player.start(time);
-          }
+          if (player) player.start(time);
         } catch (e) {
           console.warn(`Could not play drum sample: ${note}`, e);
         }
@@ -149,15 +135,15 @@ export function useAudioEngine() {
   const stopNote = useCallback((note: string, type: 'melodic' | 'percussive' = 'melodic') => {
     if (!isLoaded) return;
     const time = Tone.now();
-    
+    const inst = currentInstrument.current;
+
     if (type === 'melodic') {
-      const inst = currentInstrument.current;
       if (!inst) return;
 
       if (inst.id === 'piano' && pianoSampler.current?.loaded) {
         pianoSampler.current.triggerRelease(note, time);
-      } else if (inst.id === 'xylophone' && xylophoneSampler.current) {
-        xylophoneSampler.current.triggerRelease(note, time);
+      } else if (inst.id === 'xylophone' && xylophoneSynth.current) {
+        xylophoneSynth.current.triggerRelease(note, time);
       } else if (inst.id === 'violin' && violinSynth.current) {
         violinSynth.current.triggerRelease(note, time);
       } else {

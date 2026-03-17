@@ -1,3 +1,4 @@
+
 "use client"
 
 import { Label } from "@/components/ui/label"
@@ -34,8 +35,9 @@ export function ControlPanel({
   onXyloLabelModeChange,
   xyloColorMode,
   onXyloColorModeChange,
-  lang
+  lang,
 }: ControlPanelProps) {
+
   const t = {
     fr: {
       volume: "Volume Master",
@@ -135,71 +137,73 @@ export function ControlPanel({
           <span className="text-xs font-black text-neutral-900 dark:text-white uppercase tracking-tighter">{t.custom}</span>
         </div>
         
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button variant="outline" className="h-12 w-12 rounded-2xl border-black/10 dark:border-white/10 bg-white dark:bg-neutral-800 hover:scale-105 transition-transform p-0 shadow-lg">
-              <div className="w-6 h-6 rounded-lg shadow-inner" style={{ backgroundColor: keyColor }} />
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-80 p-6 bg-white dark:bg-neutral-900 border-black/5 dark:border-white/10 shadow-3xl rounded-[2rem] backdrop-blur-xl space-y-6" side="top" align="end">
-            <div className="space-y-4">
-              <div className="flex items-center gap-2 px-1">
-                <Palette className="w-4 h-4 text-accent" />
-                <h4 className="text-[10px] font-black uppercase tracking-[0.2em]">{t.select}</h4>
+        <div className="flex items-center gap-2">
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline" className="h-12 w-12 rounded-2xl border-black/10 dark:border-white/10 bg-white dark:bg-neutral-800 hover:scale-105 transition-transform p-0 shadow-lg">
+                <div className="w-6 h-6 rounded-lg shadow-inner" style={{ backgroundColor: keyColor }} />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-80 p-6 bg-white dark:bg-neutral-900 border-black/5 dark:border-white/10 shadow-3xl rounded-[2rem] backdrop-blur-xl space-y-6" side="top" align="end">
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 px-1">
+                  <Palette className="w-4 h-4 text-accent" />
+                  <h4 className="text-[10px] font-black uppercase tracking-[0.2em]">{t.select}</h4>
+                </div>
+                <div className="grid grid-cols-3 gap-2">
+                  {colors.map((c) => (
+                    <button
+                      key={c.value}
+                      onClick={() => onKeyColorChange(c.value)}
+                      className={cn(
+                        "group relative w-full h-10 rounded-xl transition-all duration-300 border-2 overflow-hidden",
+                        keyColor === c.value 
+                          ? "border-accent scale-105" 
+                          : "border-transparent opacity-60 hover:opacity-100"
+                      )}
+                      style={{ backgroundColor: c.value }}
+                      title={c.name}
+                    >
+                      {keyColor === c.value && (
+                        <div className="absolute inset-0 bg-white/20 animate-pulse" />
+                      )}
+                    </button>
+                  ))}
+                </div>
               </div>
-              <div className="grid grid-cols-3 gap-2">
-                {colors.map((c) => (
-                  <button
-                    key={c.value}
-                    onClick={() => onKeyColorChange(c.value)}
-                    className={cn(
-                      "group relative w-full h-10 rounded-xl transition-all duration-300 border-2 overflow-hidden",
-                      keyColor === c.value 
-                        ? "border-accent scale-105" 
-                        : "border-transparent opacity-60 hover:opacity-100"
-                    )}
-                    style={{ backgroundColor: c.value }}
-                    title={c.name}
-                  >
-                    {keyColor === c.value && (
-                      <div className="absolute inset-0 bg-white/20 animate-pulse" />
-                    )}
-                  </button>
-                ))}
-              </div>
-            </div>
 
-            <div className="space-y-4 pt-2 border-t border-border/20">
-              <div className="flex items-center gap-2 px-1">
-                <Type className="w-4 h-4 text-primary" />
-                <h4 className="text-[10px] font-black uppercase tracking-[0.2em]">{t.labels}</h4>
+              <div className="space-y-4 pt-2 border-t border-border/20">
+                <div className="flex items-center gap-2 px-1">
+                  <Type className="w-4 h-4 text-primary" />
+                  <h4 className="text-[10px] font-black uppercase tracking-[0.2em]">{t.labels}</h4>
+                </div>
+                <Select value={xyloLabelMode} onValueChange={(val: any) => onXyloLabelModeChange(val)}>
+                  <SelectTrigger className="rounded-xl h-10 text-xs font-bold uppercase tracking-widest">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="rounded-xl">
+                    <SelectItem value="solfege">{t.modes.solfege}</SelectItem>
+                    <SelectItem value="alpha">{t.modes.alpha}</SelectItem>
+                    <SelectItem value="numeric">{t.modes.numeric}</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
-              <Select value={xyloLabelMode} onValueChange={(val: any) => onXyloLabelModeChange(val)}>
-                <SelectTrigger className="rounded-xl h-10 text-xs font-bold uppercase tracking-widest">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent className="rounded-xl">
-                  <SelectItem value="solfege">{t.modes.solfege}</SelectItem>
-                  <SelectItem value="alpha">{t.modes.alpha}</SelectItem>
-                  <SelectItem value="numeric">{t.modes.numeric}</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
 
-            <div className="space-y-4 pt-2 border-t border-border/20">
-              <div className="flex items-center gap-2 px-1">
-                <Paintbrush className="w-4 h-4 text-emerald-500" />
-                <h4 className="text-[10px] font-black uppercase tracking-[0.2em]">{t.colors}</h4>
+              <div className="space-y-4 pt-2 border-t border-border/20">
+                <div className="flex items-center gap-2 px-1">
+                  <Paintbrush className="w-4 h-4 text-emerald-500" />
+                  <h4 className="text-[10px] font-black uppercase tracking-[0.2em]">{t.colors}</h4>
+                </div>
+                <Tabs value={xyloColorMode} onValueChange={(val: any) => onXyloColorModeChange(val)}>
+                  <TabsList className="grid grid-cols-2 rounded-xl h-10">
+                    <TabsTrigger value="rainbow" className="text-[10px] font-black uppercase tracking-tighter">{t.modes.rainbow}</TabsTrigger>
+                    <TabsTrigger value="monochrome" className="text-[10px] font-black uppercase tracking-tighter">{t.modes.monochrome}</TabsTrigger>
+                  </TabsList>
+                </Tabs>
               </div>
-              <Tabs value={xyloColorMode} onValueChange={(val: any) => onXyloColorModeChange(val)}>
-                <TabsList className="grid grid-cols-2 rounded-xl h-10">
-                  <TabsTrigger value="rainbow" className="text-[10px] font-black uppercase tracking-tighter">{t.modes.rainbow}</TabsTrigger>
-                  <TabsTrigger value="monochrome" className="text-[10px] font-black uppercase tracking-tighter">{t.modes.monochrome}</TabsTrigger>
-                </TabsList>
-              </Tabs>
-            </div>
-          </PopoverContent>
-        </Popover>
+            </PopoverContent>
+          </Popover>
+        </div>
       </div>
     </div>
   )
