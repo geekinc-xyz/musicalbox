@@ -43,7 +43,7 @@ export function useAudioEngine() {
       setAnalyzer(fft);
       Tone.getDestination().connect(fft);
 
-      // Synthèse Mallet (Fallback pour le Xylo)
+      // Fallback Synth for Mallets
       malletSynth.current = new Tone.PolySynth(Tone.Synth, {
         oscillator: { type: "triangle" },
         envelope: { attack: 0.005, decay: 0.1, sustain: 0.1, release: 1 },
@@ -64,16 +64,18 @@ export function useAudioEngine() {
         baseUrl: "https://tonejs.github.io/audio/salamander/",
       }).connect(reverbRef.current);
 
-      // Xylophone Sampler (Charge les sons extraits du .sf2 dans /public/audio/instruments/xylophone/)
+      // Xylophone Sampler (Custom SF2 Samples)
       xylophoneSampler.current = new Tone.Sampler({
         urls: {
           C4: "C4.mp3", D4: "D4.mp3", E4: "E4.mp3", F4: "F4.mp3",
           G4: "G4.mp3", A4: "A4.mp3", B4: "B4.mp3", C5: "C5.mp3"
         },
         baseUrl: "/audio/instruments/xylophone/",
-        onload: () => console.log("Xylophone custom samples loaded successfully"),
+        onload: () => {
+          console.log("Xylophone SoundFont samples loaded successfully.");
+        },
         onerror: (err) => {
-          console.warn("Xylophone custom samples not found. Using synthesis fallback.");
+          console.warn("Xylophone samples not found at /audio/instruments/xylophone/. Falling back to synthesis.");
         }
       }).connect(reverbRef.current);
 
