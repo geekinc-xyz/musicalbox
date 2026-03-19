@@ -49,9 +49,7 @@ export const DRUM_PADS = [
   { id: 'kick', name: 'Kick', note: 'kick', color: 'bg-red-500' },
   { id: 'snare', name: 'Snare', note: 'snare', color: 'bg-blue-500' },
   { id: 'hihat_closed', name: 'Hi-Hat', note: 'hihat', color: 'bg-yellow-500' },
-  { id: 'hihat_open', name: 'Open Hat', note: 'openhihat', color: 'bg-yellow-600' },
   { id: 'tom_low', name: 'Floor Tom', note: 'tom1', color: 'bg-purple-500' },
   { id: 'tom_mid', name: 'Mid Tom', note: 'tom2', color: 'bg-purple-600' },
   { id: 'tom_high', name: 'High Tom', note: 'tom3', color: 'bg-purple-700' },
-  { id: 'crash', name: 'Crash', note: 'crash', color: 'bg-orange-500' },
 ];
