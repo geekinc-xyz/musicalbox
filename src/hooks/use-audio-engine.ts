@@ -64,18 +64,24 @@ export function useAudioEngine() {
         baseUrl: "https://tonejs.github.io/audio/salamander/",
       }).connect(reverbRef.current);
 
-      // Xylophone Sampler (Custom SF2 Samples)
+      // Xylophone Sampler (Mapping to the user's .wav files)
       xylophoneSampler.current = new Tone.Sampler({
         urls: {
-          C4: "C4.mp3", D4: "D4.mp3", E4: "E4.mp3", F4: "F4.mp3",
-          G4: "G4.mp3", A4: "A4.mp3", B4: "B4.mp3", C5: "C5.mp3"
+          C4: "C (1).wav", 
+          D4: "D (1).wav", 
+          E4: "E (1).wav", 
+          F4: "F (1).wav",
+          G4: "G (1).wav", 
+          A4: "A (1).wav", 
+          B4: "B (1).wav", 
+          C5: "C (2).wav"
         },
         baseUrl: "/audio/instruments/xylophone/",
         onload: () => {
-          console.log("Xylophone SoundFont samples loaded successfully.");
+          console.log("Xylophone .wav samples loaded successfully.");
         },
         onerror: (err) => {
-          console.warn("Xylophone samples not found at /audio/instruments/xylophone/. Falling back to synthesis.");
+          console.warn("Could not load .wav samples from /audio/instruments/xylophone/. Ensure files are named 'C (1).wav', etc.");
         }
       }).connect(reverbRef.current);
 
