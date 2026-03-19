@@ -43,7 +43,7 @@ export function useAudioEngine() {
       setAnalyzer(fft);
       Tone.getDestination().connect(fft);
 
-      // Fallback Synth for Mallets
+      // Fallback Synth
       malletSynth.current = new Tone.PolySynth(Tone.Synth, {
         oscillator: { type: "triangle" },
         envelope: { attack: 0.005, decay: 0.1, sustain: 0.1, release: 1 },
@@ -64,24 +64,21 @@ export function useAudioEngine() {
         baseUrl: "https://tonejs.github.io/audio/salamander/",
       }).connect(reverbRef.current);
 
-      // Xylophone Sampler (Mapping to the user's .wav files)
+      // Xylophone Sampler: mapping A (1).wav to A (44).wav starting from C4
+      const xyloUrls: Record<string, string> = {};
+      const notesArray = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+      for (let i = 1; i <= 44; i++) {
+        const midiNote = i + 59; // 60 is C4
+        const octave = Math.floor(midiNote / 12) - 1;
+        const noteName = notesArray[midiNote % 12];
+        xyloUrls[`${noteName}${octave}`] = `A (${i}).wav`;
+      }
+
       xylophoneSampler.current = new Tone.Sampler({
-        urls: {
-          C4: "C (1).wav", 
-          D4: "D (1).wav", 
-          E4: "E (1).wav", 
-          F4: "F (1).wav",
-          G4: "G (1).wav", 
-          A4: "A (1).wav", 
-          B4: "B (1).wav", 
-          C5: "C (2).wav"
-        },
+        urls: xyloUrls,
         baseUrl: "/audio/instruments/xylophone/",
         onload: () => {
-          console.log("Xylophone .wav samples loaded successfully.");
-        },
-        onerror: (err) => {
-          console.warn("Could not load .wav samples from /audio/instruments/xylophone/. Ensure files are named 'C (1).wav', etc.");
+          console.log("Xylophone Custom A(1-44) pack loaded.");
         }
       }).connect(reverbRef.current);
 
