@@ -1,7 +1,6 @@
-
 "use client"
 
-import { Music, ArrowLeft, Globe, Terminal } from 'lucide-react';
+import { Music, ArrowLeft, Globe, Terminal, ExternalLink } from 'lucide-react';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
@@ -36,7 +35,7 @@ export default function CreditsPage() {
         tone: "Le framework Web Audio pour le séquençage et la synthèse.",
         piano: "Échantillons de piano haute qualité par Alexander Holm.",
         drums: "Banque de sons officiels de Tone.js.",
-        xylo: "Échantillons personnalisés (Pack A1-A44) extraits de banques SoundFont.",
+        xylo: "Pack complet d'échantillons (A1-A44) par SoundPacks.com.",
         next: "Framework React pour la performance et le routing.",
         tailwind: "Pour un design adaptatif et moderne.",
         shadcn: "Composants d'interface élégants et accessibles.",
@@ -54,7 +53,7 @@ export default function CreditsPage() {
         tone: "The Web Audio framework for sequencing and synthesis.",
         piano: "High-quality piano samples by Alexander Holm.",
         drums: "Official Tone.js sound bank.",
-        xylo: "Custom samples (A1-A44 pack) extracted from SoundFont banks.",
+        xylo: "Full samples pack (A1-A44) by SoundPacks.com.",
         next: "React framework for performance and routing.",
         tailwind: "For adaptive and modern design.",
         shadcn: "Elegant and accessible interface components.",
@@ -121,7 +120,17 @@ export default function CreditsPage() {
                 <li><strong className="text-white">Tone.js</strong> — {t.resources.tone}</li>
                 <li><strong className="text-white">Grand Piano</strong> — {t.resources.piano}</li>
                 <li><strong className="text-white">Acoustic Kit</strong> — {t.resources.drums}</li>
-                <li><strong className="text-white">Xylophone Pack A(1-44)</strong> — {t.resources.xylo}</li>
+                <li className="flex flex-col gap-1">
+                  <div><strong className="text-white">Xylophone Samples</strong> — {t.resources.xylo}</div>
+                  <a 
+                    href="https://soundpacks.com/free-sound-packs/xylophone-samples-pack/" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-1 text-accent hover:underline text-[10px] font-bold uppercase tracking-wider"
+                  >
+                    Source: SoundPacks.com <ExternalLink className="w-3 h-3" />
+                  </a>
+                </li>
               </ul>
             </div>
 
