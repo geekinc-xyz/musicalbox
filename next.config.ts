@@ -1,7 +1,7 @@
-import type {NextConfig} from 'next';
+import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  output: 'export', // Force l'export en HTML/CSS/JS statique
   typescript: {
     ignoreBuildErrors: true,
   },
@@ -9,6 +9,7 @@ const nextConfig: NextConfig = {
     ignoreDuringBuilds: true,
   },
   images: {
+    unoptimized: true, // Requis par Cloudflare pour l'export statique
     remotePatterns: [
       {
         protocol: 'https',
