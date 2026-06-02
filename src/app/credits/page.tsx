@@ -30,7 +30,7 @@ export default function CreditsPage() {
       description: "MusicalBox est un projet né de la passion pour la musique et le code. Voici les ressources qui ont rendu ce studio virtuel possible.",
       audio_engine: "Moteur Audio",
       interface_ui: "Interface UI",
-      copyright: "© 2026 MusicalBox, un projet GEEK Inc. Tous droits réservés.",
+      copyright: "© 2026 MusicalBox, un projet GEEK FACTORY. Tous droits réservés.",
       resources: {
         tone: "Le framework Web Audio pour le séquençage et la synthèse.",
         piano: "Échantillons de piano haute qualité par Alexander Holm.",
@@ -48,7 +48,7 @@ export default function CreditsPage() {
       description: "MusicalBox is a project born from a passion for music and code. Here are the resources that made this virtual studio possible.",
       audio_engine: "Audio Engine",
       interface_ui: "UI Interface",
-      copyright: "© 2026 MusicalBox, a GEEK Inc project. All rights reserved.",
+      copyright: "© 2026 MusicalBox, a GEEK FACTORY project. All rights reserved.",
       resources: {
         tone: "The Web Audio framework for sequencing and synthesis.",
         piano: "High-quality piano samples by Alexander Holm.",
