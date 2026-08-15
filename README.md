@@ -1,3 +1,6 @@
+> **Warning**
+> This repository, MusicalBox, is now outdated. The migration to [CloudBeats Studio](https://github.com/geekinc-xyz/cloudbeats-studio) is recommended.
+
 # 🎹 MusicalBox
 
 > **BETA – Virtual Studio 2.0**
