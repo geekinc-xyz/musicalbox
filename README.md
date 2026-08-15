@@ -1,5 +1,5 @@
-> **Warning**
-> This repository, MusicalBox, is now outdated. The migration to [CloudBeats Studio](https://github.com/geekinc-xyz/cloudbeats-studio) is recommended.
+> **Warning!**
+> This repository, MusicalBox, is now outdated. The migration to [CloudBeats Studio](https://github.com/geekinc-xyz/cloudbeats-studio) is recommended. This project gonna be desactivated at the 05/11/2026!
 
 # 🎹 MusicalBox
 
